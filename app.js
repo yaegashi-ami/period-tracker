@@ -1,3 +1,4 @@
+import { dayGap, shiftDay, recordAt, predict, recordedInMonth, overlaps } from "./calendar-model.mjs";
 const STORAGE_KEY = 'period-tracker-prototype-v1';
 const $ = (id) => document.getElementById(id);
 const todayISO = () => {
@@ -29,7 +30,7 @@ const loadState = () => {
 };
 let state = loadState();
 let displayedMonth = new Date();
-let selectedDate = null;
+let selectedDate = todayISO();
 let editingId = null;
 let showCompletion = false;
 const save = () => {
@@ -54,11 +55,7 @@ const show = (screen) => {
   }
   window.scrollTo({ top: 0, behavior: 'instant' });
 };
-const showNotice = (message) => {
-  $('selected-date-panel').innerHTML = '';
-  const strong = document.createElement('strong'); strong.textContent = message;
-  $('selected-date-panel').append(strong);
-};
+const showNotice = (message) => { $('app-notice').textContent = message; $('app-notice').hidden = false; };
 const showError = (id, message) => { const node = $(id); node.textContent = message; node.hidden = !message; };
 const addStartRow = (value = '') => {
   const row = document.createElement('div'); row.className = 'date-row';
@@ -99,92 +96,94 @@ $('setup-form').addEventListener('submit', (event) => {
 $('dismiss-completion').addEventListener('click', () => { showCompletion = false; show('calendar-screen'); });
 
 const sortedPeriods = () => [...state.periods].sort((a, b) => b.start.localeCompare(a.start));
-const recordForDate = (iso) => {
-  const confirmed = state.periods.find((p) => p.end && p.start <= iso && iso <= p.end);
-  if (confirmed) return { type: 'confirmed', start: confirmed.start === iso };
-  const provisional = state.periods.find((p) => !p.end && p.start <= iso && iso <= addDays(p.start, 4));
-  return provisional ? { type: 'provisional', start: provisional.start === iso } : null;
-};
-const renderRecords = () => {
-  const list = $('records-list'); list.replaceChildren();
-  if (!state.periods.length) { const p = document.createElement('p'); p.className = 'empty-records'; p.textContent = 'まだ記録がありません。'; list.append(p); return; }
-  for (const period of sortedPeriods()) {
-    const row = document.createElement('div'); row.className = 'record-row';
-    const text = document.createElement('div');
-    const title = document.createElement('strong'); title.textContent = `${dateLabel(period.start)} 開始`;
-    const end = document.createElement('small'); end.textContent = period.end ? `${dateLabel(period.end)} 終了` : '終了日未入力・5日間は仮表示';
-    const button = document.createElement('button'); button.type = 'button'; button.textContent = '修正'; button.addEventListener('click', () => openEdit(period.id));
-    text.append(title, end); row.append(text, button); list.append(row);
-  }
-};
 const renderCalendar = () => {
   const year = displayedMonth.getFullYear(), month = displayedMonth.getMonth();
-  $('month-label').textContent = `${year}年 ${month + 1}月`;
-  $('cycle-summary').textContent = state.irregular ? `周期は不定期${state.cycleDays ? `・入力した目安 ${state.cycleDays}日` : ''}` : `入力した周期の目安 ${state.cycleDays}日`;
+  $('month-label').textContent = `${year}年 ${month + 1}月 ▾`;
+  $('month-label').setAttribute('aria-label', `${year}年${month + 1}月、年月を選ぶ`);
+  const prediction = predict(state);
+  $('ovulation-legend').hidden = !state.showOvulation;
+  $('pms-legend').hidden = !state.showPremenstrual;
+  $('prediction-note').textContent = prediction ? '予測と各時期の表示は目安です。' : '周期の日数か、2回以上の開始日を記録すると予測が表示されます。';
   const firstWeekday = new Date(year, month, 1).getDay();
+  const count = Math.ceil((firstWeekday + new Date(year, month + 1, 0).getDate()) / 7) * 7;
   const grid = $('calendar-grid'); grid.replaceChildren();
-  for (let i = 0; i < 42; i++) {
+  for (let i = 0; i < count; i++) {
     const date = new Date(year, month, i - firstWeekday + 1);
     const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const button = document.createElement('button'); button.type = 'button'; button.className = 'day'; button.textContent = date.getDate();
-    button.setAttribute('aria-label', `${dateLabel(iso)}${recordForDate(iso) ? '、生理の記録があります' : ''}`);
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'day';
+    const mark = document.createElement('span'); mark.className = 'day-mark'; mark.textContent = date.getDate(); button.append(mark);
+    const labels = [dateLabel(iso)];
     if (date.getMonth() !== month) button.classList.add('outside');
-    if (iso === todayISO()) button.classList.add('today');
+    if (iso === todayISO()) { button.classList.add('today'); button.setAttribute('aria-current', 'date'); labels.push('今日'); }
+    button.setAttribute('aria-pressed', String(iso === selectedDate));
     if (iso === selectedDate) button.classList.add('selected');
-    const record = recordForDate(iso);
-    if (record) { button.classList.add(record.type); if (record.start) button.classList.add('start'); }
-    button.addEventListener('click', () => openDate(iso));
-    grid.append(button);
+    const record = recordAt(state.periods, iso);
+    if (record) {
+      mark.classList.add('period-color');
+      if (record.provisional) mark.style.backgroundColor = ['#ec7da5','#ee88ac','#f093b4','#f29ebb','#f4a9c3'][record.offset];
+      labels.push(record.provisional ? '生理、終了日未入力の仮表示' : '生理');
+    } else if (prediction) {
+      const main = iso === prediction.main, alternative = iso === prediction.alternative;
+      if (main || alternative) {
+        mark.classList.add(main ? 'forecast-main' : 'forecast-alternative');
+        if (main && alternative) mark.classList.add('forecast-both');
+        if (main) labels.push('本命の生理開始予測日');
+        if (alternative) labels.push('対抗の生理開始予測日');
+      } else if (state.showOvulation && iso === prediction.ovulation) { mark.classList.add('ovulation-color'); labels.push('排卵予定日の目安'); }
+      else if (state.showPremenstrual && prediction.pmsFrom && prediction.pmsFrom <= iso && iso <= prediction.pmsTo) { mark.classList.add('pms-color'); labels.push('PMSが出やすい時期の目安'); }
+    }
+    button.setAttribute('aria-label', labels.join('、'));
+    button.addEventListener('click', () => { selectedDate = iso; renderCalendar(); grid.querySelector(`[data-date="${iso}"]`)?.focus({ preventScroll: true }); });
+    button.dataset.date = iso; grid.append(button);
   }
-  renderRecords();
+  const record = recordAt(state.periods, selectedDate);
+  $('date-action').textContent = record ? '生理終了' : '生理開始';
+  $('date-action').disabled = selectedDate > todayISO();
+  $('date-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を${record ? '生理終了日' : '生理開始日'}にする`);
+  $('edit-period').disabled = !state.periods.length;
 };
 $('prev-month').addEventListener('click', () => { displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1); renderCalendar(); });
 $('next-month').addEventListener('click', () => { displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1); renderCalendar(); });
-const openDate = (iso) => {
-  selectedDate = iso; renderCalendar();
-  $('dialog-title').textContent = dateLabel(iso); showError('date-error', '');
-  $('record-start').disabled = iso > todayISO() || state.periods.some((p) => p.start === iso);
-  const select = $('period-for-end'); select.replaceChildren();
-  for (const p of sortedPeriods().filter((p) => p.start <= iso)) {
-    const option = document.createElement('option'); option.value = p.id; option.textContent = `${dateLabel(p.start)} 開始`; select.append(option);
-  }
-  $('record-end').disabled = iso > todayISO() || !select.options.length;
-  $('selected-date-panel').innerHTML = '';
-  const strong = document.createElement('strong'); strong.textContent = dateLabel(iso);
-  const p = document.createElement('p'); p.textContent = '開始日や終了日を記録・修正できます。';
-  $('selected-date-panel').append(strong, p);
-  $('date-dialog').showModal();
-};
-$('close-dialog').addEventListener('click', () => $('date-dialog').close());
-$('record-start').addEventListener('click', () => {
+$('date-action').addEventListener('click', () => {
   if (!selectedDate || selectedDate > todayISO()) return;
-  if (state.periods.some((p) => p.start === selectedDate)) { showError('date-error', 'この日はすでに開始日として記録されています。'); return; }
-  state.periods.push({ id: createId(), start: selectedDate, end: null });
-  if (!save()) return; $('date-dialog').close(); renderCalendar();
+  const record = recordAt(state.periods, selectedDate);
+  showError('calendar-error', '');
+  const previous = structuredClone(state);
+  if (record) record.period.end = selectedDate;
+  else state.periods.push({ id: createId(), start: selectedDate, end: null });
+  if (!save()) { state = previous; return; }
+  renderCalendar();
 });
-$('record-end').addEventListener('click', () => {
-  const period = state.periods.find((p) => p.id === $('period-for-end').value);
-  if (!period || !selectedDate || selectedDate > todayISO() || selectedDate < period.start) return;
-  period.end = selectedDate;
-  if (!save()) return; $('date-dialog').close(); renderCalendar();
-});
-$('add-today').addEventListener('click', () => openDate(todayISO()));
-const openEdit = (id) => {
-  const period = state.periods.find((p) => p.id === id); if (!period) return;
-  editingId = id; $('edit-start').value = period.start; $('edit-end').value = period.end ?? '';
-  $('edit-start').max = todayISO(); $('edit-end').max = todayISO(); showError('edit-error', ''); $('edit-dialog').showModal();
+const populateEdit = (id) => {
+  const period = state.periods.find(p => p.id === id); if (!period) return;
+  editingId = id; $('edit-record-select').value = id;
+  $('edit-start').value = period.start; $('edit-end').value = period.end || '';
+  $('edit-start').max = todayISO(); $('edit-end').max = todayISO(); $('edit-end').min = period.start;
+  showError('edit-error', '');
 };
+$('edit-period').addEventListener('click', () => {
+  const select = $('edit-record-select'); select.replaceChildren();
+  for (const p of sortedPeriods()) { const option = document.createElement('option'); option.value = p.id; option.textContent = `${dateLabel(p.start)} 開始`; select.append(option); }
+  const record = recordAt(state.periods, selectedDate);
+  const target = record?.period || sortedPeriods().find(p => p.start <= selectedDate) || sortedPeriods()[0];
+  if (!target) return;
+  populateEdit(target.id); $('edit-dialog').showModal();
+});
+$('edit-record-select').addEventListener('change', () => populateEdit($('edit-record-select').value));
+$('edit-start').addEventListener('change', () => { $('edit-end').min = $('edit-start').value; });
 $('close-edit').addEventListener('click', () => $('edit-dialog').close());
 $('save-edit').addEventListener('click', () => {
-  const period = state.periods.find((p) => p.id === editingId); if (!period) return;
+  const period = state.periods.find(p => p.id === editingId); if (!period) return;
   const start = $('edit-start').value, end = $('edit-end').value || null;
   let error = '';
   if (!validISO(start) || start > todayISO()) error = '開始日は今日以前の日付にしてください。';
-  else if (state.periods.some((p) => p.id !== editingId && p.start === start)) error = '同じ開始日が重複しています。';
   else if (end && (!validISO(end) || end < start || end > todayISO())) error = '終了日は開始日から今日までの日付にしてください。';
+  else if (overlaps(state.periods, editingId, start, end)) error = 'ほかの生理の記録と日付が重なっています。';
   showError('edit-error', error); if (error) return;
-  period.start = start; period.end = end;
-  if (!save()) return; $('edit-dialog').close(); renderCalendar();
+  const previous = structuredClone(state); period.start = start; period.end = end;
+  if (!save()) { state = previous; return; }
+  selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`);
+  $('edit-dialog').close(); renderCalendar();
 });
 $('settings-button').addEventListener('click', () => {
   $('settings-premenstrual').checked = state.showPremenstrual;
@@ -193,11 +192,41 @@ $('settings-button').addEventListener('click', () => {
 });
 $('close-settings').addEventListener('click', () => $('settings-dialog').close());
 $('save-settings').addEventListener('click', () => {
+  const previous = structuredClone(state);
   state.showPremenstrual = $('settings-premenstrual').checked;
   state.showOvulation = $('settings-ovulation').checked;
-  if (!save()) return; $('settings-dialog').close();
+  if (!save()) { state = previous; return; }
+  $('settings-dialog').close(); renderCalendar();
 });
-
+let firstPickerYear, lastPickerYear;
+const renderMonthPicker = () => {
+  const list = $('month-years'); list.replaceChildren(); const now = new Date();
+  for (let year = firstPickerYear; year <= lastPickerYear; year++) {
+    const section = document.createElement('section'); section.className = 'year-section'; section.id = `picker-year-${year}`;
+    const heading = document.createElement('h3'); heading.textContent = year; section.append(heading);
+    const months = document.createElement('div'); months.className = 'month-grid';
+    for (let month = 0; month < 12; month++) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'month-option'; button.textContent = `${month + 1}月`;
+      const recorded = recordedInMonth(state.periods, year, month);
+      const current = now.getFullYear() === year && now.getMonth() === month;
+      if (recorded) button.classList.add('has-record');
+      if (current) { button.classList.add('current-month'); button.setAttribute('aria-current', 'date'); }
+      button.setAttribute('aria-label', `${year}年${month + 1}月${recorded ? '、生理の記録あり' : ''}${current ? '、今月' : ''}`);
+      button.setAttribute('aria-pressed', String(displayedMonth.getFullYear() === year && displayedMonth.getMonth() === month));
+      button.addEventListener('click', () => { displayedMonth = new Date(year, month, 1); $('month-dialog').close(); renderCalendar(); });
+      months.append(button);
+    }
+    section.append(months); list.append(section);
+  }
+};
+$('month-label').addEventListener('click', () => {
+  firstPickerYear = displayedMonth.getFullYear() - 1; lastPickerYear = displayedMonth.getFullYear() + 2;
+  renderMonthPicker(); $('month-dialog').showModal();
+  $(`picker-year-${displayedMonth.getFullYear()}`).scrollIntoView({ block: 'start' });
+});
+$('close-month').addEventListener('click', () => $('month-dialog').close());
+$('earlier-years').addEventListener('click', () => { firstPickerYear -= 3; renderMonthPicker(); });
+$('later-years').addEventListener('click', () => { lastPickerYear += 3; renderMonthPicker(); });
 addStartRow();
 if (state.onboarded) { renderCalendar(); show('calendar-screen'); }
 else show('start-screen');

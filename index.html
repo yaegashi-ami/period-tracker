@@ -80,35 +80,31 @@
           <button id="dismiss-completion" class="completion-dismiss" type="button" aria-label="完了メッセージを閉じる">×</button>
         </div>
         <div class="calendar-intro">
-          <div><h1 id="calendar-title">生理カレンダー</h1><p id="cycle-summary" class="lead compact"></p></div>
-          <button id="settings-button" class="icon-button" type="button" aria-label="表示設定を開く">⚙</button>
+          <h1 id="calendar-title">生理カレンダー</h1>
+          <button id="settings-button" class="icon-button" type="button" aria-label="表示する目安を選ぶ" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
         <div class="calendar-card">
-          <div class="month-nav"><button id="prev-month" class="icon-button" type="button" aria-label="前の月">‹</button><h2 id="month-label"></h2><button id="next-month" class="icon-button" type="button" aria-label="次の月">›</button></div>
+          <div class="month-nav"><button id="prev-month" class="icon-button" type="button" aria-label="前の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button id="month-label" class="month-title" type="button" aria-haspopup="dialog"></button><button id="next-month" class="icon-button" type="button" aria-label="次の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div>
+          <div class="legend" aria-label="日付の色の意味">
+            <span><i class="legend-dot period-color"></i>生理</span>
+            <span><i class="legend-dot forecast-main"></i>◎ 本命の開始日</span>
+            <span><i class="legend-dot forecast-alternative"></i>○ 対抗の開始日</span>
+            <span id="ovulation-legend"><i class="legend-dot ovulation-color"></i>排卵予定日</span>
+            <span id="pms-legend"><i class="legend-dot pms-color"></i>PMSが出やすい時期</span>
+          </div>
           <div class="weekdays" aria-hidden="true"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
           <div id="calendar-grid" class="calendar-grid"></div>
-          <div class="legend"><span><i class="legend-dot confirmed"></i> 記録済み</span><span><i class="legend-dot provisional"></i> 終了日未入力の仮表示</span></div>
+          <div class="calendar-edit-bar"><button id="edit-period" class="edit-period" type="button">生理を編集</button><button id="date-action" class="date-action" type="button">生理開始</button></div>
+          <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
-        <div id="selected-date-panel" class="selected-date-panel"><strong>日付をタップしてください</strong><p>開始日や終了日を記録・修正できます。</p></div>
-        <div class="section-heading records-heading"><h2>記録した生理</h2><button id="add-today" class="text-button" type="button">＋ 今日を記録</button></div>
-        <div id="records-list" class="records-list"></div>
-        
+        <p id="prediction-note" class="prediction-note"></p>
       </section>
     </main>
-
-    <dialog id="date-dialog" class="date-dialog" aria-labelledby="dialog-title">
-      <form id="date-form" method="dialog">
-        <div class="dialog-header"><div><h2 id="dialog-title"></h2></div><button id="close-dialog" class="icon-button" type="button" aria-label="閉じる">×</button></div>
-        <p class="dialog-help">この日に行ったことを選んでください。</p>
-        <button id="record-start" class="dialog-action" type="button"><span>この日を開始日として記録</span><span aria-hidden="true">＋</span></button>
-        <div class="end-action"><label for="period-for-end">終了日を設定・修正する記録</label><select id="period-for-end"></select><button id="record-end" class="dialog-action" type="button">この日を終了日にする <span aria-hidden="true">→</span></button></div>
-        <p id="date-error" class="error-message" role="alert" hidden></p>
-      </form>
-    </dialog>
 
     <dialog id="edit-dialog" class="date-dialog" aria-labelledby="edit-title">
       <form id="edit-form" method="dialog">
         <div class="dialog-header"><h2 id="edit-title">記録を修正</h2><button id="close-edit" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+        <label class="edit-field">編集する生理<select id="edit-record-select"></select></label>
         <label class="edit-field">開始日<input id="edit-start" type="date" required /></label>
         <label class="edit-field">終了日 <span class="optional">（未入力でもOK）</span><input id="edit-end" type="date" /></label>
         <p id="edit-error" class="error-message" role="alert" hidden></p>
@@ -118,14 +114,21 @@
 
     <dialog id="settings-dialog" class="date-dialog" aria-labelledby="settings-title">
       <form id="settings-form" method="dialog">
-        <div class="dialog-header"><h2 id="settings-title">表示設定</h2><button id="close-settings" class="icon-button" type="button" aria-label="閉じる">×</button></div>
-        <label class="choice-row"><input id="settings-premenstrual" type="checkbox" /><span><strong>生理前の時期</strong></span></label>
+        <div class="dialog-header"><h2 id="settings-title">カレンダーに表示</h2><button id="close-settings" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+        <label class="choice-row"><input id="settings-premenstrual" type="checkbox" /><span><strong>PMSが出やすい時期</strong></span></label>
         <label class="choice-row"><input id="settings-ovulation" type="checkbox" /><span><strong>排卵予定日</strong></span></label>
         
         <button id="save-settings" class="primary-button" type="button">保存する</button>
       </form>
     </dialog>
 
+    <dialog id="month-dialog" class="month-dialog" aria-labelledby="month-picker-title">
+      <div class="dialog-header"><h2 id="month-picker-title">年月を選ぶ</h2><button id="close-month" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+      <button id="earlier-years" class="secondary-button" type="button">以前の年を表示</button>
+      <div id="month-years"></div>
+      <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
+    </dialog>
+    <p id="app-notice" class="app-notice" role="alert" hidden></p>
     <script type="module" src="./app.js"></script>
   </body>
 </html>
