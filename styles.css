@@ -1704,12 +1704,25 @@ body.onboarding-active,
   accent-color: #d0c9ff;
 }
 .is-onboarding .number-field {
-  max-width: 150px;
+  max-width: 120px;
+  gap: 16px;
+}
+.is-onboarding .number-field input {
+  flex: 1 1 0;
+}
+.is-onboarding .number-field span {
+  flex-shrink: 0;
 }
 .is-onboarding .number-field input,
 .is-onboarding .date-list input {
+  box-sizing: border-box;
+  display: block;
   min-width: 0;
   height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  padding-block: 0;
+  line-height: normal;
   font-size: 16px;
   font-weight: 400;
   color: #fff;
@@ -1785,4 +1798,22 @@ body.onboarding-active,
   color: #26233f;
   background: #eeeaff;
   box-shadow: 0 0 0 5px #1a1930;
+}
+
+.is-onboarding .setup-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.is-onboarding .setup-heading h1 {
+  margin: 0;
+  font-size: clamp(20px, 6vw, 26px);
+  white-space: nowrap;
+}
+.is-onboarding .setup-heading p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #ddddea;
 }
