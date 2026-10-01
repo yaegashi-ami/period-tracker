@@ -44,6 +44,9 @@ const show = (screen) => {
   const step = screen === 'welcome-screen' ? 1 : screen === 'setup-screen' ? 2 : showCompletion ? 3 : 0;
   $('app-shell').classList.toggle('is-start', screen === 'start-screen');
   document.body.classList.toggle('start-active', screen === 'start-screen');
+  const onboarding = screen === 'welcome-screen' || screen === 'setup-screen';
+  $('app-shell').classList.toggle('is-onboarding', onboarding);
+  document.body.classList.toggle('onboarding-active', onboarding);
   $('completion-card').hidden = !showCompletion;
   $('onboarding-progress').hidden = step === 0;
   $('onboarding-progress').dataset.step = String(step);

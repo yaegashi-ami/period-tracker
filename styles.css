@@ -1596,3 +1596,193 @@ select:focus-visible {
 /* 無彩色の面に青い光を薄く重ねる。 */
 body{background:radial-gradient(circle at 85% -8%,#294765 0,transparent 38%),#121212}
 .app-shell:not(.is-start){background:radial-gradient(circle at 90% -8%,#273c55 0,transparent 36%),#181818}
+
+/* スタート画面をブラウザのバーが見えている高さに収める。 */
+body.start-active,
+.app-shell.is-start {
+  min-height: 100svh;
+}
+.start-screen {
+  min-height: 100svh;
+  gap: 16px;
+  padding: clamp(16px, 3svh, 32px) 24px max(16px, env(safe-area-inset-bottom));
+}
+.start-content {
+  gap: clamp(18px, 3svh, 32px);
+  padding-bottom: 0;
+}
+.start-logo {
+  width: min(60vw, 30svh, 320px);
+}
+.start-screen h1 {
+  font-size: clamp(20px, 5vw, 28px);
+  white-space: normal;
+}
+.start-features {
+  padding: clamp(20px, 3svh, 32px) 24px;
+  gap: 16px;
+}
+.start-features li {
+  font-size: clamp(16px, 4.5vw, 22px);
+}
+.start-button {
+  min-height: 52px;
+  font-size: 18px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* 初期設定はスタート画面と同じトーンでつなぐ。 */
+body.onboarding-active,
+.app-shell.is-onboarding:not(.is-start) {
+  min-height: 100svh;
+  background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
+}
+.is-onboarding .screen,
+.is-onboarding .onboarding-progress {
+  width: min(100%, 520px);
+  margin-inline: auto;
+}
+.is-onboarding .onboarding-progress {
+  padding: 24px 24px 0;
+}
+.is-onboarding .screen {
+  padding: 32px 24px max(24px, env(safe-area-inset-bottom));
+}
+.is-onboarding h1 {
+  font-size: 26px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: #fff;
+}
+.is-onboarding .lead,
+.is-onboarding .field-hint,
+.is-onboarding .subtle,
+.is-onboarding .choice-row small {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #ddddea;
+}
+.is-onboarding .lead {
+  margin: 12px 0 24px;
+}
+.is-onboarding .choice-card,
+.is-onboarding .form-card {
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 12%);
+  box-shadow: none;
+}
+.is-onboarding .choice-row {
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+.is-onboarding .choice-row:first-child {
+  padding-top: 4px;
+}
+.is-onboarding .choice-row:last-child {
+  padding-bottom: 4px;
+}
+.is-onboarding .choice-row + .choice-row {
+  border-color: rgb(255 255 255 / 14%);
+}
+.is-onboarding .choice-row input {
+  order: 1;
+  margin-left: auto;
+}
+.is-onboarding .choice-row strong,
+.is-onboarding .field-title,
+.is-onboarding .checkbox-line {
+  font-size: 16px;
+  color: #fff;
+}
+.is-onboarding .choice-row input,
+.is-onboarding .checkbox-line input {
+  accent-color: #d0c9ff;
+}
+.is-onboarding .number-field {
+  max-width: 150px;
+}
+.is-onboarding .number-field input,
+.is-onboarding .date-list input {
+  min-width: 0;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 25%);
+  border-radius: 12px;
+}
+.is-onboarding .number-field input::placeholder {
+  color: #c6c5d6;
+}
+.is-onboarding .number-field span {
+  font-size: 15px;
+  color: #ddddea;
+}
+.is-onboarding .date-row input {
+  flex: 1 1 0;
+}
+.is-onboarding .field-hint {
+  margin: 12px 0 0;
+}
+.is-onboarding .section-heading {
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.is-onboarding .text-button {
+  padding: 2px 0;
+  font-size: 14px;
+  color: #fff;
+}
+.is-onboarding .remove-date {
+  width: 36px;
+  height: 44px;
+  color: #fff;
+  background: transparent;
+}
+.is-onboarding .primary-button {
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #181822;
+  font-size: 16px;
+  box-shadow: none;
+}
+.is-onboarding .primary-button:hover {
+  background: #efedf8;
+}
+.is-onboarding .secondary-button {
+  font-size: 15px;
+  color: #ddddea;
+}
+.is-onboarding .progress-head,
+.is-onboarding .progress-step.active,
+.is-onboarding .progress-step.complete {
+  color: #fff;
+}
+.is-onboarding .progress-head span,
+.is-onboarding .progress-step {
+  color: #aaa8c2;
+}
+.is-onboarding .progress-steps::before {
+  background: #49455f;
+}
+.is-onboarding .progress-steps::after {
+  background: #e0dafa;
+}
+.is-onboarding .progress-icon {
+  background: #49455f;
+  box-shadow: 0 0 0 5px #1a1930;
+}
+.is-onboarding .progress-step.active .progress-icon,
+.is-onboarding .progress-step.complete .progress-icon {
+  color: #26233f;
+  background: #eeeaff;
+  box-shadow: 0 0 0 5px #1a1930;
+}

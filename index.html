@@ -36,18 +36,17 @@
       <section id="welcome-screen" class="screen" aria-labelledby="welcome-title" hidden>
         <h1 id="welcome-title">表示したい項目</h1>
         <p class="lead">カレンダーに表示する目安を選んでください。後から変更できます。</p>
-        <fieldset class="choice-card">
-          <legend>カレンダーに表示したい目安</legend>
+        <div class="choice-card" role="group" aria-label="カレンダーに表示する目安">
           <label class="choice-row"><input id="show-premenstrual" type="checkbox" checked /><span><strong>生理前の時期</strong><small>気分や体調が変わりやすい時期の目安</small></span></label>
           <label class="choice-row"><input id="show-ovulation" type="checkbox" checked /><span><strong>排卵予定日</strong><small>周期から計算する予定日の目安</small></span></label>
-        </fieldset>
+        </div>
         <p class="subtle">記録から計算した目安を表示します。</p>
         <button id="welcome-next" class="primary-button" type="button">次へ <span aria-hidden="true">→</span></button>
         <button id="welcome-back" class="secondary-button" type="button">戻る</button>
       </section>
 
       <section id="setup-screen" class="screen" aria-labelledby="setup-title" hidden>
-        <h1 id="setup-title">周期と最近の生理開始日を入力</h1>
+        <h1 id="setup-title">周期と開始日</h1>
         <p class="lead">後から修正できます。</p>
         <form id="setup-form" novalidate>
           <div class="form-card">
