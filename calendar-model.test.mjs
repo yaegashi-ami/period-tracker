@@ -13,7 +13,7 @@ test('日付差は閏日と年をまたいでも日数単位', () => {
 });
 test('直近3周期の中央値と1年の平均、および指定された時期', () => {
   assert.deepEqual(predict({ periods, cycleDays: 28 }), {
-    main: '2025-04-28', alternative: '2025-04-27', ovulation: '2025-04-14', pmsFrom: '2025-04-15', pmsTo: '2025-04-27'
+    main: '2025-04-28', alternative: '2025-04-27', ovulation: '2025-04-14', pmsFrom: '2025-04-18', pmsTo: '2025-04-25'
   });
 });
 test('開始日1回なら入力周期、未入力なら仮の28日、記録なしは予測なし', () => {

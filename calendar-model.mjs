@@ -25,8 +25,8 @@ export const predict = (state) => {
   if (!median && !average) return null;
   const main = median ? shiftDay(latest, Math.round(median)) : null;
   return { main, alternative: average ? shiftDay(latest, Math.round(average)) : null,
-    ovulation: main ? shiftDay(main, -14) : null, pmsFrom: main ? shiftDay(main, -13) : null,
-    pmsTo: main ? shiftDay(main, -1) : null };
+    ovulation: main ? shiftDay(main, -14) : null, pmsFrom: main ? shiftDay(main, -10) : null,
+    pmsTo: main ? shiftDay(main, -3) : null };
 };
 export const recordedInMonth = (periods, year, month) => {
   const first = `${year}-${String(month + 1).padStart(2, '0')}-01`;
