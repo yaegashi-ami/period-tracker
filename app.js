@@ -122,7 +122,7 @@ const renderCalendar = () => {
     const record = recordAt(state.periods, iso);
     if (record) {
       mark.classList.add('period-color');
-      if (record.provisional) mark.style.backgroundColor = ['#f04c8a','#f25792','#f4629a','#f66da2','#f878aa'][record.offset];
+      if (record.provisional) mark.style.backgroundColor = ['#ed1769','#ef2170','#f12b77','#f3357e','#f53f85'][record.offset];
       labels.push(record.provisional ? '生理、終了日未入力の仮表示' : '生理');
     } else if (prediction) {
       const main = iso === prediction.main, alternative = iso === prediction.alternative;

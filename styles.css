@@ -56,10 +56,10 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 
 /* Vivid date markers with consistent white numerals. */
 .day,.day.outside,.day-mark{color:#fff}
-.period-color{background-color:#f04c8a;color:#fff}
-.forecast-main,.forecast-alternative{background-color:#8170f5;color:#fff}
+.period-color{background-color:#ed1769;color:#fff}
+.forecast-main,.forecast-alternative{background-color:#6542f5;color:#fff}
 .forecast-alternative{background-image:repeating-linear-gradient(135deg,transparent 0,transparent 4px,#ffffff30 4px,#ffffff30 6px)}
-.ovulation-color{background-color:#b366ee;color:#fff}
-.pms-color{background-color:#2cb8b3;color:#fff}
+.ovulation-color{background-color:#a32bea;color:#fff}
+.pms-color{background-color:#00aaa4;color:#fff}
 
 .calendar-edit-bar .edit-period{font-size:13px;font-weight:500;padding:0}.calendar-edit-bar .date-action{font-size:13px;font-weight:500;min-height:34px;padding:7px 15px}
