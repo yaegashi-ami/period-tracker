@@ -12,7 +12,7 @@
   <body>
     <main id="app-shell" class="app-shell">
       <header id="brand-bar" class="brand-bar">
-        <img class="brand-mark" src="./assets/logo.png" alt="period" />
+        <img class="brand-mark" src="./assets/logo_skeleton.png" alt="period" />
         <span class="brand-caption">生理の記録と周期の確認</span>
       </header>
 
@@ -39,14 +39,14 @@
       </div>
 
       <section id="welcome-screen" class="screen" aria-labelledby="welcome-title" hidden>
-        <h1 id="welcome-title">表示したい項目を選ぶ</h1>
+        <h1 id="welcome-title">表示したい項目</h1>
         <p class="lead">カレンダーに表示する目安を選んでください。後から変更できます。</p>
         <fieldset class="choice-card">
           <legend>カレンダーに表示したい目安</legend>
           <label class="choice-row"><input id="show-premenstrual" type="checkbox" checked /><span><strong>生理前の時期</strong><small>気分や体調が変わりやすい時期の目安</small></span></label>
           <label class="choice-row"><input id="show-ovulation" type="checkbox" checked /><span><strong>排卵予定日</strong><small>周期から計算する予定日の目安</small></span></label>
         </fieldset>
-        <p class="subtle">表示項目は後から変更できます。日付は診断ではなく、記録から計算した目安です。</p>
+        <p class="subtle">記録から計算した目安を表示します。</p>
         <button id="welcome-next" class="primary-button" type="button">次へ <span aria-hidden="true">→</span></button>
         <button id="welcome-back" class="secondary-button" type="button">戻る</button>
       </section>

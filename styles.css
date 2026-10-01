@@ -45,8 +45,8 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 .edit-period{color:#eeeeef}.date-action{background:#4d293c;color:#ffa5c8}
 .date-dialog,.month-dialog{background:#222222;color:#eeeeef;box-shadow:0 24px 70px #0008}.date-dialog::backdrop,.month-dialog::backdrop{background:#000000bd}.month-dialog .dialog-header{background:#222222}.year-section h3{color:#81b7fa}.month-option{color:#eeeeef}.month-option.has-record{border-color:#74abef}.month-option.current-month{background:#438ce6;color:#fff}.month-option.current-month.has-record{outline-color:#74abef}.month-option:hover{box-shadow:0 0 0 4px #303b49}
 .completion-card{background:#252b32;border-color:#414c59}.completion-card p{color:#bac2cc}.completion-dismiss{color:#aac9ef}.completion-check{background:#438ce6}.error-message{color:#ff9fbb}.app-notice{background:#432b27;color:#ffd5c4;border-color:#96654f}
-.start-screen h1{color:#fff}.start-features{background:#fff;color:#3025cd}.start-button{color:#fff}
-
+.start-screen h1{color:#fff}.start-features{background:#fff;color:#3025cd}
+.start-button{background-color:#fff;color:#3025cd;display: flex;align-items: center;justify-content: center;padding: 10px 20px;border-radius: 999px;margin-bottom: 16px}
 .visibility-popover{position:fixed;inset:auto;margin:0;padding:8px;background:#2c2c2e;color:#eeeeef;border:1px solid #48484b;border-radius:14px;box-shadow:0 8px 24px #0005;font-size:14px;max-width:calc(100vw - 24px)}.visibility-popover::backdrop{background:transparent}.visibility-popover label{display:flex;align-items:center;gap:11px;min-height:44px;padding:8px 10px;cursor:pointer;border-radius:8px}.visibility-popover label:hover{background:#39393d}.visibility-popover input{margin:0;width:18px;height:18px;accent-color:#74abef;flex-shrink:0}
 
 .day.today .day-mark:after{display:none}
