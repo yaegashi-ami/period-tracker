@@ -142,7 +142,6 @@ const renderCalendar = () => {
   $('date-action').textContent = record ? '生理終了' : '生理開始';
   $('date-action').disabled = selectedDate > todayISO();
   $('date-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を${record ? '生理終了日' : '生理開始日'}にする`);
-  $('edit-period').disabled = !state.periods.length;
 };
 const moveMonth = delta => {
   displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + delta, 1);
@@ -182,14 +181,6 @@ const populateEdit = (id) => {
   $('edit-start').max = todayISO(); $('edit-end').max = todayISO(); $('edit-end').min = period.start;
   showError('edit-error', '');
 };
-$('edit-period').addEventListener('click', () => {
-  const select = $('edit-record-select'); select.replaceChildren();
-  for (const p of sortedPeriods()) { const option = document.createElement('option'); option.value = p.id; option.textContent = `${dateLabel(p.start)} 開始`; select.append(option); }
-  const record = recordAt(state.periods, selectedDate);
-  const target = record?.period || sortedPeriods().find(p => p.start <= selectedDate) || sortedPeriods()[0];
-  if (!target) return;
-  populateEdit(target.id); $('edit-dialog').showModal();
-});
 $('edit-record-select').addEventListener('change', () => populateEdit($('edit-record-select').value));
 $('edit-start').addEventListener('change', () => { $('edit-end').min = $('edit-start').value; });
 $('close-edit').addEventListener('click', () => $('edit-dialog').close());
