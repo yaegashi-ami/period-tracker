@@ -103,7 +103,7 @@ const renderCalendar = () => {
   const prediction = predict(state);
   $('ovulation-legend').hidden = !state.showOvulation;
   $('pms-legend').hidden = !state.showPremenstrual;
-  $('prediction-note').textContent = prediction ? '予測と各時期の表示は目安です。' : '周期の日数か、2回以上の開始日を記録すると予測が表示されます。';
+  $('prediction-note').textContent = !prediction ? '開始日を記録すると予測が表示されます。' : state.periods.length === 1 && !(Number.isInteger(state.cycleDays) && state.cycleDays > 0) ? '28日周期で仮に予測しています。' : '予測と各時期の表示は目安です。';
   const firstWeekday = new Date(year, month, 1).getDay();
   const count = Math.ceil((firstWeekday + new Date(year, month + 1, 0).getDate()) / 7) * 7;
   const grid = $('calendar-grid'); grid.replaceChildren();
