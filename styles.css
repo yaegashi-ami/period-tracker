@@ -30,24 +30,24 @@ body.start-active,.app-shell.is-start{background:#2922ca}.app-shell.is-start{box
 .month-dialog{width:min(calc(100% - 24px),600px);max-height:90dvh;padding:24px;border:0;border-radius:24px;color:#302779;background:#fff;overflow:auto}.month-dialog::backdrop{background:#16133f83}.month-dialog .dialog-header{position:sticky;top:-24px;background:white;padding:16px 0;z-index:1}.year-section{margin:30px 0 44px;scroll-margin-top:75px}.year-section h3{font-size:38px;color:#392bcf;font-weight:400;margin:0 0 20px}.month-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px 10px;justify-items:center}.month-option{display:grid;place-items:center;width:clamp(48px,13vw,70px);aspect-ratio:1;border:2px solid transparent;border-radius:50%;padding:0;background:transparent;color:#3d3755;font:inherit;font-size:21px;font-weight:700}.month-option.has-record{border-color:#6b5ed9}.month-option.current-month{background:#3025cd;color:#fff}.month-option.current-month.has-record{outline:1px solid #3025cd;outline-offset:3px}.month-option:hover{box-shadow:0 0 0 4px #ede9ff}.app-notice{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);width:min(90%,500px);padding:15px 20px;background:#fff4ed;color:#863d27;border:1px solid #e3bbaa;border-radius:14px;z-index:40}
 @media(max-width:420px){#calendar-screen{padding:24px 14px 40px}.calendar-card{padding:14px 8px}.calendar-card .legend{font-size:10px;gap:8px 10px}.day{font-size:15px;padding:5px}.calendar-grid{row-gap:6px}.calendar-edit-bar{margin-inline:8px}.month-dialog{padding:18px}.month-option{font-size:19px}}
 /* Dark appearance */
-:root{color-scheme:dark;color:#eeeaf8;background:#111016}
-body{background:#111016}.app-shell{background:#17151e;box-shadow:none}.brand-bar{border-color:#302b3d}.brand-caption,.subtle,.field-hint,.choice-row small,.lead,.record-row small,.optional,.dialog-help,.prediction-note{color:#b4adc6}
-h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress-head,.selected-date-panel strong{color:#eee9ff}
-.choice-card,.form-card,.calendar-card{background:#211e2b;border-color:#373144;box-shadow:none}
-.choice-row+.choice-row,.calendar-edit-bar{border-color:#3c354b}.choice-row input,.checkbox-line input{accent-color:#a89cff}
-.number-field input,.date-list input,.edit-field input,.edit-field select,.end-action select{background:#17151e;color:#f2edff;border-color:#534967}
-.primary-button{background:#8976f0;border-color:#8976f0;color:#100d24;box-shadow:none}.primary-button:hover{background:#a18fff}
-.secondary-button,.text-button{color:#b6a8ff}.icon-button,.remove-date{background:#353044;color:#c5b9ff}
-.progress-head span,.progress-step{color:#a89fb9}.progress-steps:before{background:#443b56}.progress-steps:after{background:#b5a4ff}
-.progress-icon{background:#4c435e;box-shadow:0 0 0 5px #17151e}.progress-step.active,.progress-step.complete{color:#d4caff}.progress-step.active .progress-icon,.progress-step.complete .progress-icon{background:#8c76ec;color:#fff}.progress-step.active .progress-icon{box-shadow:0 0 0 5px #342b50}
-.weekdays span,.legend{color:#bdb4cd}.day{color:#eee9f6}.day.outside{color:#9c92ae}.day.today .day-mark:after{border-color:#eee7ff}.day.selected .day-mark:before{border-color:#aa99ce}
-.period-color{color:#492035}.forecast-main,.forecast-alternative{color:#fff}.forecast-both{outline-color:#e1d9ff}.ovulation-color{color:#45266b}.pms-color{color:#215b53}
-.edit-period{color:#eee9f6}.date-action{background:#4d293c;color:#ffa5c8}
-.date-dialog,.month-dialog{background:#211e2b;color:#eee9f6;box-shadow:0 24px 70px #0008}.date-dialog::backdrop,.month-dialog::backdrop{background:#08060dbd}.month-dialog .dialog-header{background:#211e2b}.year-section h3{color:#b5a4ff}.month-option{color:#eee9f6}.month-option.has-record{border-color:#ad99f4}.month-option.current-month{background:#8871ee;color:#fff}.month-option.current-month.has-record{outline-color:#ad99f4}.month-option:hover{box-shadow:0 0 0 4px #443855}
-.completion-card{background:#30273f;border-color:#554568}.completion-card p{color:#c6bdd6}.completion-dismiss{color:#c9baf0}.completion-check{background:#8c76ec}.error-message{color:#ff9fbb}.app-notice{background:#432b27;color:#ffd5c4;border-color:#96654f}
+:root{color-scheme:dark;color:#eeeeef;background:#121212}
+body{background:#121212}.app-shell{background:#181818;box-shadow:none}.brand-bar{border-color:#303030}.brand-caption,.subtle,.field-hint,.choice-row small,.lead,.record-row small,.optional,.dialog-help,.prediction-note{color:#ababaf}
+h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress-head,.selected-date-panel strong{color:#f0f0f2}
+.choice-card,.form-card,.calendar-card{background:#222222;border-color:#363636;box-shadow:none}
+.choice-row+.choice-row,.calendar-edit-bar{border-color:#383838}.choice-row input,.checkbox-line input{accent-color:#6daaff}
+.number-field input,.date-list input,.edit-field input,.edit-field select,.end-action select{background:#181818;color:#f2f2f3;border-color:#505054}
+.primary-button{background:#438ce6;border-color:#438ce6;color:#ffffff;box-shadow:none}.primary-button:hover{background:#5b9ef0}
+.secondary-button,.text-button{color:#80b6fa}.icon-button,.remove-date{background:#303134;color:#a6ccff}
+.progress-head span,.progress-step{color:#a4a4ab}.progress-steps:before{background:#404044}.progress-steps:after{background:#81b7fa}
+.progress-icon{background:#47474c;box-shadow:0 0 0 5px #181818}.progress-step.active,.progress-step.complete{color:#b5d4ff}.progress-step.active .progress-icon,.progress-step.complete .progress-icon{background:#438ce6;color:#fff}.progress-step.active .progress-icon{box-shadow:0 0 0 5px #233348}
+.weekdays span,.legend{color:#b8b8bd}.day{color:#eeeeef}.day.outside{color:#939399}.day.today .day-mark:after{border-color:#eeeeef}.day.selected .day-mark:before{border-color:#a3c8f8}
+.period-color{color:#492035}.forecast-main,.forecast-alternative{color:#fff}.forecast-both{outline-color:#d2e4fa}.ovulation-color{color:#45266b}.pms-color{color:#215b53}
+.edit-period{color:#eeeeef}.date-action{background:#4d293c;color:#ffa5c8}
+.date-dialog,.month-dialog{background:#222222;color:#eeeeef;box-shadow:0 24px 70px #0008}.date-dialog::backdrop,.month-dialog::backdrop{background:#000000bd}.month-dialog .dialog-header{background:#222222}.year-section h3{color:#81b7fa}.month-option{color:#eeeeef}.month-option.has-record{border-color:#74abef}.month-option.current-month{background:#438ce6;color:#fff}.month-option.current-month.has-record{outline-color:#74abef}.month-option:hover{box-shadow:0 0 0 4px #303b49}
+.completion-card{background:#252b32;border-color:#414c59}.completion-card p{color:#bac2cc}.completion-dismiss{color:#aac9ef}.completion-check{background:#438ce6}.error-message{color:#ff9fbb}.app-notice{background:#432b27;color:#ffd5c4;border-color:#96654f}
 .start-screen h1{color:#fff}.start-features{background:#fff;color:#3025cd}.start-button{color:#fff}
 
-.visibility-popover{position:fixed;inset:auto;margin:0;padding:8px;background:#302b3c;color:#eee9f6;border:1px solid #504660;border-radius:14px;box-shadow:0 8px 24px #0005;font-size:14px;max-width:calc(100vw - 24px)}.visibility-popover::backdrop{background:transparent}.visibility-popover label{display:flex;align-items:center;gap:11px;min-height:44px;padding:8px 10px;cursor:pointer;border-radius:8px}.visibility-popover label:hover{background:#40374f}.visibility-popover input{margin:0;width:18px;height:18px;accent-color:#ad99f4;flex-shrink:0}
+.visibility-popover{position:fixed;inset:auto;margin:0;padding:8px;background:#2c2c2e;color:#eeeeef;border:1px solid #48484b;border-radius:14px;box-shadow:0 8px 24px #0005;font-size:14px;max-width:calc(100vw - 24px)}.visibility-popover::backdrop{background:transparent}.visibility-popover label{display:flex;align-items:center;gap:11px;min-height:44px;padding:8px 10px;cursor:pointer;border-radius:8px}.visibility-popover label:hover{background:#39393d}.visibility-popover input{margin:0;width:18px;height:18px;accent-color:#74abef;flex-shrink:0}
 
 .day.today .day-mark:after{display:none}
 
@@ -63,5 +63,7 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 .pms-color{background-color:#00aaa4;color:#fff}
 
 .calendar-edit-bar .edit-period{font-size:13px;font-weight:500;padding:0}.calendar-edit-bar .date-action{font-size:13px;font-weight:500;min-height:34px;padding:7px 15px}
-.day.outside .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color){color:#837b94}
+.day.outside .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color){color:#85858a}
 .forecast-alternative{background-color:#8266f7;background-image:none}
+
+button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#80b6fa}.day:focus-visible{outline-color:#80b6fa}
