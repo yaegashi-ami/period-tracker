@@ -63,3 +63,4 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 .pms-color{background-color:#00aaa4;color:#fff}
 
 .calendar-edit-bar .edit-period{font-size:13px;font-weight:500;padding:0}.calendar-edit-bar .date-action{font-size:13px;font-weight:500;min-height:34px;padding:7px 15px}
+.day.outside .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color){color:#837b94}
