@@ -31,6 +31,8 @@ const loadState = () => {
 let state = loadState();
 let displayedMonth = new Date();
 let selectedDate = todayISO();
+let hasSelectedDate = false;
+let suppressDateClickUntil = 0;
 let editingId = null;
 let showCompletion = false;
 const save = () => {
@@ -115,8 +117,8 @@ const renderCalendar = () => {
     const labels = [dateLabel(iso)];
     if (date.getMonth() !== month) button.classList.add('outside');
     if (iso === todayISO()) { button.classList.add('today'); button.setAttribute('aria-current', 'date'); labels.push('今日'); }
-    button.setAttribute('aria-pressed', String(iso === selectedDate));
-    if (iso === selectedDate) button.classList.add('selected');
+    button.setAttribute('aria-pressed', String(hasSelectedDate && iso === selectedDate));
+    if (hasSelectedDate && iso === selectedDate) button.classList.add('selected');
     const record = recordAt(state.periods, iso);
     if (record) {
       mark.classList.add('period-color');
@@ -133,7 +135,7 @@ const renderCalendar = () => {
       else if (state.showPremenstrual && prediction.pmsFrom && prediction.pmsFrom <= iso && iso <= prediction.pmsTo) { mark.classList.add('pms-color'); labels.push('PMSが出やすい時期の目安'); }
     }
     button.setAttribute('aria-label', labels.join('、'));
-    button.addEventListener('click', () => { selectedDate = iso; renderCalendar(); grid.querySelector(`[data-date="${iso}"]`)?.focus({ preventScroll: true }); });
+    button.addEventListener('click', () => { if (Date.now() < suppressDateClickUntil) return; hasSelectedDate = true; selectedDate = iso; renderCalendar(); grid.querySelector(`[data-date="${iso}"]`)?.focus({ preventScroll: true }); });
     button.dataset.date = iso; grid.append(button);
   }
   const record = recordAt(state.periods, selectedDate);
@@ -142,8 +144,27 @@ const renderCalendar = () => {
   $('date-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を${record ? '生理終了日' : '生理開始日'}にする`);
   $('edit-period').disabled = !state.periods.length;
 };
-$('prev-month').addEventListener('click', () => { displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() - 1, 1); renderCalendar(); });
-$('next-month').addEventListener('click', () => { displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + 1, 1); renderCalendar(); });
+const moveMonth = delta => {
+  displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + delta, 1);
+  renderCalendar();
+};
+$('prev-month').addEventListener('click', () => moveMonth(-1));
+$('next-month').addEventListener('click', () => moveMonth(1));
+let swipeStart = null;
+const calendarGrid = $('calendar-grid');
+calendarGrid.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || event.button !== 0) { swipeStart = null; return; }
+  swipeStart = { id: event.pointerId, x: event.clientX, y: event.clientY, time: Date.now() };
+});
+calendarGrid.addEventListener('pointercancel', () => { swipeStart = null; });
+window.addEventListener('pointerup', event => {
+  const start = swipeStart; swipeStart = null;
+  if (!start || start.id !== event.pointerId) return;
+  const dx = event.clientX - start.x, dy = event.clientY - start.y;
+  if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - start.time > 1200) return;
+  suppressDateClickUntil = Date.now() + 400;
+  moveMonth(dx < 0 ? 1 : -1);
+});
 $('date-action').addEventListener('click', () => {
   if (!selectedDate || selectedDate > todayISO()) return;
   const record = recordAt(state.periods, selectedDate);
@@ -185,19 +206,34 @@ $('save-edit').addEventListener('click', () => {
   selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`);
   $('edit-dialog').close(); renderCalendar();
 });
-$('settings-button').addEventListener('click', () => {
+const syncVisibility = () => {
   $('settings-premenstrual').checked = state.showPremenstrual;
   $('settings-ovulation').checked = state.showOvulation;
-  $('settings-dialog').showModal();
+};
+const positionVisibility = () => {
+  const anchor = $('settings-button').getBoundingClientRect();
+  const popover = $('settings-popover');
+  const width = Math.min(260, window.innerWidth - 24);
+  popover.style.width = `${width}px`;
+  popover.style.left = `${Math.max(12, Math.min(anchor.right - width, window.innerWidth - width - 12))}px`;
+  popover.style.top = `${Math.max(12, Math.min(anchor.bottom + 8, window.innerHeight - 128))}px`;
+};
+$('settings-popover').addEventListener('beforetoggle', event => {
+  if (event.newState === 'open') { syncVisibility(); positionVisibility(); }
 });
-$('close-settings').addEventListener('click', () => $('settings-dialog').close());
-$('save-settings').addEventListener('click', () => {
-  const previous = structuredClone(state);
-  state.showPremenstrual = $('settings-premenstrual').checked;
-  state.showOvulation = $('settings-ovulation').checked;
-  if (!save()) { state = previous; return; }
-  $('settings-dialog').close(); renderCalendar();
-});
+window.addEventListener('resize', positionVisibility);
+window.addEventListener('scroll', () => {
+  if ($('settings-popover').matches(':popover-open')) $('settings-popover').hidePopover();
+}, { passive: true });
+for (const id of ['settings-premenstrual', 'settings-ovulation']) {
+  $(id).addEventListener('change', () => {
+    const previous = structuredClone(state);
+    state.showPremenstrual = $('settings-premenstrual').checked;
+    state.showOvulation = $('settings-ovulation').checked;
+    if (!save()) { state = previous; syncVisibility(); return; }
+    renderCalendar();
+  });
+}
 let firstPickerYear, lastPickerYear;
 const renderMonthPicker = () => {
   const list = $('month-years'); list.replaceChildren(); const now = new Date();

@@ -21,7 +21,7 @@ body.start-active,.app-shell.is-start{background:#2922ca}.app-shell.is-start{box
 .calendar-grid{gap:5px 0}.day{height:auto;min-width:0;aspect-ratio:1;border:0;border-radius:0;background:transparent!important;padding:3px;display:grid;place-items:center;color:#37334e;font-size:16px;font-weight:700;box-shadow:none!important;position:relative}
 .day-mark{width:min(80%,42px);aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;line-height:1}
 .day.today:after{display:none}.day.today .day-mark:after{content:"";position:absolute;inset:-3px;border:1.5px solid #382ac9;border-radius:50%;pointer-events:none}
-.day.selected{outline:0}.day.selected .day-mark:before{content:"";position:absolute;inset:-5px;border:1px dashed #7166af;border-radius:50%;pointer-events:none}
+.day.selected{outline:0}.day.selected .day-mark:before{content:"";position:absolute;inset:-5px;border:1.5px solid #7166af;border-radius:50%;pointer-events:none}
 .day:focus-visible{outline:2px solid #7166af;outline-offset:-2px;border-radius:50%}.day.outside{opacity:1;color:#aaa5ba}
 .period-color{background:#ec7da5;color:#492035}.forecast-main,.forecast-alternative{background-color:#7970e9;color:#fff}.forecast-alternative{background-image:repeating-linear-gradient(135deg,transparent 0,transparent 4px,#ffffff8c 4px,#ffffff8c 6px)}
 .forecast-both{background-image:linear-gradient(90deg,transparent 50%,#ffffff24 50%);outline:1px dashed #4338ab;outline-offset:-3px}.ovulation-color{background:#d3b8f4;color:#45266b}.pms-color{background:#bce4de;color:#215b53}
@@ -46,3 +46,10 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 .date-dialog,.month-dialog{background:#211e2b;color:#eee9f6;box-shadow:0 24px 70px #0008}.date-dialog::backdrop,.month-dialog::backdrop{background:#08060dbd}.month-dialog .dialog-header{background:#211e2b}.year-section h3{color:#b5a4ff}.month-option{color:#eee9f6}.month-option.has-record{border-color:#ad99f4}.month-option.current-month{background:#8871ee;color:#fff}.month-option.current-month.has-record{outline-color:#ad99f4}.month-option:hover{box-shadow:0 0 0 4px #443855}
 .completion-card{background:#30273f;border-color:#554568}.completion-card p{color:#c6bdd6}.completion-dismiss{color:#c9baf0}.completion-check{background:#8c76ec}.error-message{color:#ff9fbb}.app-notice{background:#432b27;color:#ffd5c4;border-color:#96654f}
 .start-screen h1{color:#fff}.start-features{background:#fff;color:#3025cd}.start-button{color:#fff}
+
+.visibility-popover{position:fixed;inset:auto;margin:0;padding:8px;background:#302b3c;color:#eee9f6;border:1px solid #504660;border-radius:14px;box-shadow:0 8px 24px #0005;font-size:14px;max-width:calc(100vw - 24px)}.visibility-popover::backdrop{background:transparent}.visibility-popover label{display:flex;align-items:center;gap:11px;min-height:44px;padding:8px 10px;cursor:pointer;border-radius:8px}.visibility-popover label:hover{background:#40374f}.visibility-popover input{margin:0;width:18px;height:18px;accent-color:#ad99f4;flex-shrink:0}
+
+.day.today .day-mark:after{display:none}
+
+
+.calendar-grid{touch-action:pan-y pinch-zoom;user-select:none}

@@ -81,7 +81,7 @@
         </div>
         <div class="calendar-intro">
           <h1 id="calendar-title">生理カレンダー</h1>
-          <button id="settings-button" class="icon-button" type="button" aria-label="表示する目安を選ぶ" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button id="settings-button" class="icon-button" type="button" aria-label="表示する目安を選ぶ" popovertarget="settings-popover"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
         <div class="calendar-card">
           <div class="month-nav"><button id="prev-month" class="icon-button" type="button" aria-label="前の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button id="month-label" class="month-title" type="button" aria-haspopup="dialog"></button><button id="next-month" class="icon-button" type="button" aria-label="次の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div>
@@ -112,15 +112,10 @@
       </form>
     </dialog>
 
-    <dialog id="settings-dialog" class="date-dialog" aria-labelledby="settings-title">
-      <form id="settings-form" method="dialog">
-        <div class="dialog-header"><h2 id="settings-title">カレンダーに表示</h2><button id="close-settings" class="icon-button" type="button" aria-label="閉じる">×</button></div>
-        <label class="choice-row"><input id="settings-premenstrual" type="checkbox" /><span><strong>PMSが出やすい時期</strong></span></label>
-        <label class="choice-row"><input id="settings-ovulation" type="checkbox" /><span><strong>排卵予定日</strong></span></label>
-        
-        <button id="save-settings" class="primary-button" type="button">保存する</button>
-      </form>
-    </dialog>
+    <div id="settings-popover" class="visibility-popover" popover="auto" aria-label="カレンダーに表示する目安">
+      <label><input id="settings-premenstrual" type="checkbox" />PMSが出やすい時期</label>
+      <label><input id="settings-ovulation" type="checkbox" />排卵予定日</label>
+    </div>
 
     <dialog id="month-dialog" class="month-dialog" aria-labelledby="month-picker-title">
       <div class="dialog-header"><h2 id="month-picker-title">年月を選ぶ</h2><button id="close-month" class="icon-button" type="button" aria-label="閉じる">×</button></div>
