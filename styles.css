@@ -13,6 +13,7 @@
   font-display: swap;
 }
 :root {
+  --app-background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
   font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
   color: #252451;
   background: #f7f6ff;
@@ -819,7 +820,7 @@ h2 {
 }
 body.start-active,
 .app-shell.is-start {
-  background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
+  background: var(--app-background);
 }
 .app-shell.is-start {
   box-shadow: none;
@@ -1594,9 +1595,13 @@ select:focus-visible {
 .day-mark{transform:translateY(1px)}
 .day-number{transform:translateY(-1px)}
 
-/* 無彩色の面に青い光を薄く重ねる。 */
-body{background:radial-gradient(circle at 85% -8%,#294765 0,transparent 38%),#121212}
-.app-shell:not(.is-start){background:radial-gradient(circle at 90% -8%,#273c55 0,transparent 36%),#181818}
+/* すべての画面で共通のグラデーションを使う。 */
+body {
+  background: var(--app-background);
+}
+.app-shell:not(.is-start) {
+  background: var(--app-background);
+}
 
 /* スタート画面をブラウザのバーが見えている高さに収める。 */
 body.start-active,
@@ -1637,7 +1642,7 @@ body.start-active,
 body.onboarding-active,
 .app-shell.is-onboarding:not(.is-start) {
   min-height: 100svh;
-  background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
+  background: var(--app-background);
 }
 .is-onboarding .screen,
 .is-onboarding .onboarding-progress {
@@ -1878,4 +1883,9 @@ body.onboarding-active,
 }
 #cycle-dialog .checkbox-line {
   font-size: 15px;
+}
+
+#cycle-dialog .reset-button {
+  color: #e3a6b3;
+  font-size: 14px;
 }

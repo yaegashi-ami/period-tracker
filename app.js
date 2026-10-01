@@ -221,6 +221,16 @@ $('open-cycle').addEventListener('click', () => {
   $('edit-cycle-records').hidden = records.length === 0;
   $('cycle-dialog').showModal();
 });
+$('reset-data').addEventListener('click', () => {
+  if (!window.confirm('このブラウザに保存した生理の記録と設定をすべて削除し、最初からやり直します。削除してもよいですか？')) return;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    showNotice('リセットできませんでした。ブラウザの保存設定を確認してください。');
+    return;
+  }
+  window.location.reload();
+});
 $('close-cycle').addEventListener('click', () => $('cycle-dialog').close());
 $('cycle-form').addEventListener('submit', event => {
   event.preventDefault();
