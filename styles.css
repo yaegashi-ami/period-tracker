@@ -1589,6 +1589,10 @@ select:focus-visible {
   }
 }
 
-/* 円を1px上げ、数字は元の位置に保つ。 */
-.day-mark{transform:translateY(-1px)}
-.day-number{transform:translateY(1px)}
+/* 円を1px下げ、数字は元の位置に保つ。 */
+.day-mark{transform:translateY(1px)}
+.day-number{transform:translateY(-1px)}
+
+/* 無彩色の面に青い光を薄く重ねる。 */
+body{background:radial-gradient(circle at 85% -8%,#294765 0,transparent 38%),#121212}
+.app-shell:not(.is-start){background:radial-gradient(circle at 90% -8%,#273c55 0,transparent 36%),#181818}
