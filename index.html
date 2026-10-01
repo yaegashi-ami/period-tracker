@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#2922ca" />
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" href="./assets/logo.png" />
-    <link rel="stylesheet" href="./styles.css?v=20261001-start-spacing" />
+    <link rel="stylesheet" href="./styles.css?v=20261001-cycle" />
     <title>period｜生理の記録</title>
   </head>
   <body>
@@ -70,10 +70,8 @@
       </section>
 
       <section id="calendar-screen" class="screen" aria-labelledby="calendar-title" hidden>
-        <div id="completion-card" class="completion-card" hidden>
-          <span class="completion-check" aria-hidden="true">✓</span>
-          <div><h2>カレンダーができました</h2><p>入力した生理開始日を表示しています。日付を押すと終了日を設定できます。</p></div>
-          <button id="dismiss-completion" class="completion-dismiss" type="button" aria-label="完了メッセージを閉じる">×</button>
+        <div id="completion-toast" class="completion-toast" role="status" hidden>
+          <span aria-hidden="true">✓</span> カレンダーができました
         </div>
         <div class="calendar-intro">
           <h1 id="calendar-title">生理カレンダー</h1>
@@ -93,9 +91,25 @@
           <div class="calendar-edit-bar"><span class="edit-period">生理を編集</span><button id="date-action" class="date-action" type="button">生理開始</button></div>
           <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
+        <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">周期を確認・編集する <span aria-hidden="true">❯</span></button>
         <p id="prediction-note" class="prediction-note"></p>
       </section>
     </main>
+
+    <dialog id="cycle-dialog" class="date-dialog" aria-labelledby="cycle-title">
+      <form id="cycle-form" novalidate>
+        <div class="dialog-header"><h2 id="cycle-title">周期を確認・編集</h2><button id="close-cycle" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+        <p id="cycle-summary" class="dialog-help"></p>
+        <ul id="cycle-history" class="cycle-history"></ul>
+        <label for="edit-cycle-days" class="edit-field">周期の日数</label>
+        <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
+        <label class="checkbox-line"><input id="edit-irregular" type="checkbox" /> 周期が不定期</label>
+        <p id="cycle-help" class="dialog-help"></p>
+        <button id="edit-cycle-records" class="text-button" type="button">開始日・終了日を修正</button>
+        <p id="cycle-error" class="error-message" role="alert" hidden></p>
+        <button class="primary-button" type="submit">保存する</button>
+      </form>
+    </dialog>
 
     <dialog id="edit-dialog" class="date-dialog" aria-labelledby="edit-title">
       <form id="edit-form" method="dialog">
@@ -120,6 +134,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=20261001-cycle"></script>
   </body>
 </html>

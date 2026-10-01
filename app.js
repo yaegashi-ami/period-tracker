@@ -34,20 +34,19 @@ let selectedDate = todayISO();
 let hasSelectedDate = false;
 let suppressDateClickUntil = 0;
 let editingId = null;
-let showCompletion = false;
+let completionTimer;
 const save = () => {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; }
   catch { showNotice('保存できませんでした。ブラウザの保存設定を確認してください。'); return false; }
 };
 const show = (screen) => {
   for (const id of ['start-screen', 'welcome-screen', 'setup-screen', 'calendar-screen']) $(id).hidden = id !== screen;
-  const step = screen === 'welcome-screen' ? 1 : screen === 'setup-screen' ? 2 : showCompletion ? 3 : 0;
+  const step = screen === 'welcome-screen' ? 1 : screen === 'setup-screen' ? 2 : 0;
   $('app-shell').classList.toggle('is-start', screen === 'start-screen');
   document.body.classList.toggle('start-active', screen === 'start-screen');
   const onboarding = screen === 'welcome-screen' || screen === 'setup-screen';
   $('app-shell').classList.toggle('is-onboarding', onboarding);
   document.body.classList.toggle('onboarding-active', onboarding);
-  $('completion-card').hidden = !showCompletion;
   $('onboarding-progress').hidden = step === 0;
   $('onboarding-progress').dataset.step = String(step);
   $('progress-count').textContent = `${step} / 3`;
@@ -92,12 +91,12 @@ $('setup-form').addEventListener('submit', (event) => {
   state = { version: 1, onboarded: true, cycleDays: cycle, irregular, showPremenstrual: $('show-premenstrual').checked, showOvulation: $('show-ovulation').checked, periods: starts.map((start) => ({ id: createId(), start, end: null })) };
   if (!save()) return;
   displayedMonth = new Date();
-  showCompletion = true;
   renderCalendar();
   show('calendar-screen');
+  clearTimeout(completionTimer);
+  $('completion-toast').hidden = false;
+  completionTimer = setTimeout(() => { $('completion-toast').hidden = true; }, 4000);
 });
-
-$('dismiss-completion').addEventListener('click', () => { showCompletion = false; show('calendar-screen'); });
 
 const sortedPeriods = () => [...state.periods].sort((a, b) => b.start.localeCompare(a.start));
 const renderCalendar = () => {
@@ -107,7 +106,7 @@ const renderCalendar = () => {
   const prediction = predict(state);
   $('ovulation-legend').hidden = !state.showOvulation;
   $('pms-legend').hidden = !state.showPremenstrual;
-  $('prediction-note').textContent = !prediction ? '開始日を記録すると予測が表示されます。' : state.periods.length === 1 && !(Number.isInteger(state.cycleDays) && state.cycleDays > 0) ? '28日周期で仮に予測しています。' : '予測と各時期の表示は目安です。';
+  $('prediction-note').textContent = !prediction ? '開始日を記録すると予測が表示されます。' : state.periods.length === 1 && !(Number.isInteger(state.cycleDays) && state.cycleDays > 0) ? '28日周期で予測しています。' : '予測と各時期の表示は目安です。';
   const firstWeekday = new Date(year, month, 1).getDay();
   const count = Math.ceil((firstWeekday + new Date(year, month + 1, 0).getDate()) / 7) * 7;
   const grid = $('calendar-grid'); grid.replaceChildren();
@@ -200,6 +199,56 @@ $('save-edit').addEventListener('click', () => {
   if (!save()) { state = previous; return; }
   selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`);
   $('edit-dialog').close(); renderCalendar();
+});
+$('open-cycle').addEventListener('click', () => {
+  $('edit-cycle-days').value = state.cycleDays ?? '';
+  $('edit-irregular').checked = state.irregular;
+  showError('cycle-error', '');
+  const records = sortedPeriods().reverse();
+  const prediction = predict(state);
+  $('cycle-summary').textContent = prediction
+    ? `本命：${dayGap(records.at(-1).start, prediction.main)}日周期 ／ 対抗：${dayGap(records.at(-1).start, prediction.alternative)}日周期`
+    : '開始日を記録すると予測が表示されます。';
+  $('cycle-history').replaceChildren();
+  records.slice(1).map((record, i) => {
+    const item = document.createElement('li');
+    item.textContent = `${records[i].start} 〜 ${record.start}：${dayGap(records[i].start, record.start)}日`;
+    return item;
+  }).reverse().forEach(item => $('cycle-history').append(item));
+  $('cycle-help').textContent = records.length >= 2
+    ? '現在の予測は開始日の記録から計算しています。周期を修正する場合は開始日を修正してください。入力した日数は、開始日の記録が1回のときに使います。'
+    : '開始日の記録が1回のときに使います。空欄の場合は28日で予測します。';
+  $('edit-cycle-records').hidden = records.length === 0;
+  $('cycle-dialog').showModal();
+});
+$('close-cycle').addEventListener('click', () => $('cycle-dialog').close());
+$('cycle-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const raw = $('edit-cycle-days').value.trim();
+  const days = raw === '' ? null : Number(raw);
+  if ($('edit-cycle-days').validity.badInput || (days !== null && (!Number.isInteger(days) || days < 1 || days > 365))) {
+    showError('cycle-error', '周期は1〜365日の数字で入力してください。');
+    return;
+  }
+  const previous = structuredClone(state);
+  state.cycleDays = days;
+  state.irregular = $('edit-irregular').checked;
+  if (!save()) { state = previous; return; }
+  $('cycle-dialog').close();
+  renderCalendar();
+});
+$('edit-cycle-records').addEventListener('click', () => {
+  const records = sortedPeriods();
+  if (!records.length) return;
+  $('edit-record-select').replaceChildren(...records.map(record => {
+    const option = document.createElement('option');
+    option.value = record.id;
+    option.textContent = `${dateLabel(record.start)} 開始`;
+    return option;
+  }));
+  populateEdit(records[0].id);
+  $('cycle-dialog').close();
+  $('edit-dialog').showModal();
 });
 const syncVisibility = () => {
   $('settings-premenstrual').checked = state.showPremenstrual;
