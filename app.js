@@ -42,7 +42,6 @@ const save = () => {
 const show = (screen) => {
   for (const id of ['start-screen', 'welcome-screen', 'setup-screen', 'calendar-screen']) $(id).hidden = id !== screen;
   const step = screen === 'welcome-screen' ? 1 : screen === 'setup-screen' ? 2 : showCompletion ? 3 : 0;
-  $('brand-bar').hidden = screen !== 'calendar-screen';
   $('app-shell').classList.toggle('is-start', screen === 'start-screen');
   document.body.classList.toggle('start-active', screen === 'start-screen');
   $('completion-card').hidden = !showCompletion;
