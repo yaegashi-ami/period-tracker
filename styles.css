@@ -909,7 +909,8 @@ body.start-active,
   gap: clamp(8px, 2vw, 18px);
   white-space: nowrap;
 }
-.start-button span {
+.start-button span,
+.is-onboarding .primary-button > span {
   font-size: 0.85em;
 }
 .start-button:hover {
