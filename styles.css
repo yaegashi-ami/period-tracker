@@ -53,3 +53,11 @@ h1,h2,.calendar-intro h1,.field-title,.choice-card legend,.month-title,.progress
 
 
 .calendar-grid{touch-action:pan-y pinch-zoom;user-select:none}
+
+/* Vivid date markers with consistent white numerals. */
+.day,.day.outside,.day-mark{color:#fff}
+.period-color{background-color:#bd1654;color:#fff}
+.forecast-main,.forecast-alternative{background-color:#5141db;color:#fff}
+.forecast-alternative{background-image:repeating-linear-gradient(135deg,transparent 0,transparent 4px,#ffffff30 4px,#ffffff30 6px)}
+.ovulation-color{background-color:#8b2cce;color:#fff}
+.pms-color{background-color:#007c80;color:#fff}
