@@ -112,7 +112,9 @@ const renderCalendar = () => {
     const date = new Date(year, month, i - firstWeekday + 1);
     const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     const button = document.createElement('button'); button.type = 'button'; button.className = 'day';
-    const mark = document.createElement('span'); mark.className = 'day-mark'; mark.textContent = date.getDate(); button.append(mark);
+    const mark = document.createElement('span'); mark.className = 'day-mark';
+    const number = document.createElement('span'); number.className = 'day-number'; number.textContent = date.getDate();
+    mark.append(number); button.append(mark);
     const labels = [dateLabel(iso)];
     if (date.getMonth() !== month) button.classList.add('outside');
     if (iso === todayISO()) { button.classList.add('today'); button.setAttribute('aria-current', 'date'); labels.push('今日'); }

@@ -1588,3 +1588,7 @@ select:focus-visible {
     animation-delay: 0.6s !important;
   }
 }
+
+/* 円を1px上げ、数字は元の位置に保つ。 */
+.day-mark{transform:translateY(-1px)}
+.day-number{transform:translateY(1px)}
