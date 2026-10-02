@@ -2186,8 +2186,36 @@ body.onboarding-active,
 }
 
 #cycle-dialog .reset-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: max-content;
+  min-height: 32px;
+  margin: 14px 0 0 auto;
+  padding: 4px 0 4px 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #aeb6c4;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+#cycle-dialog .reset-button:hover {
   color: #e3a6b3;
-  font-size: 14px;
+}
+
+#cycle-dialog .reset-button svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* 周期の目安は塗りつぶさず、色の付いた枠で示す。 */
@@ -2213,6 +2241,14 @@ body.onboarding-active,
   background: var(--calendar-surface);
   border-color: var(--calendar-surface-border);
   color: #fff;
+}
+
+.date-dialog {
+  border: 1px solid var(--calendar-surface-border);
+  border-radius: 24px;
+  background: var(--calendar-surface);
+  color: #fff;
+  box-shadow: 0 16px 48px #0005;
 }
 
 .cycle-button:hover,
