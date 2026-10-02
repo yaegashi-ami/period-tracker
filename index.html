@@ -7,7 +7,7 @@
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-cycle-modal" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-cycle-edit" />
     <title>period｜生理の記録</title>
     <script>
       (function(d) {
@@ -133,36 +133,28 @@
     </main>
 
     <dialog id="cycle-dialog" class="date-dialog" aria-labelledby="cycle-title">
+      <div class="dialog-header"><h2 id="cycle-title" tabindex="-1" autofocus>周期を確認・編集</h2><button id="close-cycle" class="icon-button" type="button" aria-label="閉じる">×</button></div>
       <form id="cycle-form" novalidate>
-        <div class="dialog-header"><h2 id="cycle-title" tabindex="-1" autofocus>周期を確認・編集</h2><button id="close-cycle" class="icon-button" type="button" aria-label="閉じる">×</button></div>
         <ul id="cycle-history" class="cycle-history"></ul>
         <label for="edit-cycle-days" class="edit-field">周期の日数（任意）</label>
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
         <p id="cycle-help" class="dialog-help"></p>
-        <button id="edit-cycle-records" class="text-button cycle-record-edit" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
-          開始日・終了日を修正
-        </button>
         <p id="cycle-error" class="error-message" role="alert" hidden></p>
         <button class="primary-button" type="submit">保存する</button>
-        <button id="reset-data" class="secondary-button reset-button" type="button">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
-          記録と設定をリセット
-        </button>
       </form>
-    </dialog>
-
-    <dialog id="edit-dialog" class="date-dialog" aria-labelledby="edit-title">
-      <form id="edit-form" method="dialog">
-        <div class="dialog-header"><h2 id="edit-title">記録を修正</h2><button id="close-edit" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+      <hr class="dialog-divider" />
+      <h3 class="dialog-section-title">記録を修正</h3>
+      <form id="edit-form" novalidate>
         <label class="edit-field">編集する生理<select id="edit-record-select"></select></label>
         <label class="edit-field">開始日<input id="edit-start" type="date" required /></label>
-        <label class="checkbox-line"><input id="edit-approximate" type="checkbox" /> だいたいの開始日</label>
-        <p class="dialog-help">だいたいの日付は、前後の周期を予測の計算から外します。</p>
         <label class="edit-field">終了日 <span class="optional">（未入力でもOK）</span><input id="edit-end" type="date" /></label>
         <p id="edit-error" class="error-message" role="alert" hidden></p>
-        <button id="save-edit" class="primary-button" type="button">保存する</button>
+        <button id="save-edit" class="primary-button" type="submit">保存する</button>
       </form>
+      <button id="reset-data" class="secondary-button reset-button" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
+        記録と設定をリセット
+      </button>
     </dialog>
 
     <div id="gap-popover" class="gap-popover" popover="auto" role="dialog" aria-labelledby="gap-title" aria-describedby="gap-range">
@@ -175,8 +167,6 @@
       </div>
       <form id="gap-date-form" hidden novalidate>
         <label class="edit-field">生理開始日<input id="gap-start" type="date" required /></label>
-        <label class="checkbox-line"><input id="gap-approximate" type="checkbox" /> だいたいこの辺</label>
-        <p class="dialog-help">だいたいの日付は、前後の周期を予測の計算から外します。</p>
         <button class="primary-button" type="submit">追加する</button>
         <button id="gap-back" class="secondary-button" type="button">戻る</button>
       </form>
@@ -195,6 +185,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-cycle-focus"></script>
+    <script type="module" src="./app.js?v=20261002-cycle-edit"></script>
   </body>
 </html>

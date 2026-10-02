@@ -135,12 +135,8 @@ test('通常の周期に戻ったら、昔の長い周期は小さい重みに�
   assert.deepEqual(weightedCycles(state).map(c => c.weight), [1, 0.25, 0.25, 1, 1]);
   assert.equal(predict(state).main, shiftDay(state.periods.at(-1).start, 30));
 });
-test('だいたいの日付は前後の区間を除外し、正確な日付に直すと計算へ戻る', () => {
+test('入力した開始日は通常の記録として周期計算に使う', () => {
   const state = fromCycles([28, 30, 33, 29]);
-  state.periods[2].approximate = true;
-  assert.deepEqual(weightedCycles(state).map(c => c.days), [28, 29]);
-  assert.equal(predict(state).main, shiftDay(state.periods.at(-1).start, 29));
-  state.periods[2].approximate = false;
   assert.deepEqual(weightedCycles(state).map(c => c.days), [28, 30, 33, 29]);
 });
 test('間に日付を追加すると以前の区間の判断は残さず、新しい周期を使う', () => {

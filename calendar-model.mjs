@@ -33,21 +33,20 @@ export const cycleIntervals = (state) => {
   const reviews = new Map(activeReviews(state).map(review => [intervalKey(review.from, review.to), review.kind]));
   return records.slice(1).map((record, i) => {
     const from = records[i].start, to = record.start, key = intervalKey(from, to);
-    return { key, from, to, days: dayGap(from, to), kind: reviews.get(key) ?? 'recorded',
-      approximate: records[i].approximate === true || record.approximate === true };
+    return { key, from, to, days: dayGap(from, to), kind: reviews.get(key) ?? 'recorded' };
   });
 };
 export const gapCandidates = (state) => {
-  const cycles = cycleIntervals(state).filter(c => c.days > 0 && !c.approximate && c.kind !== 'unknown');
+  const cycles = cycleIntervals(state).filter(c => c.days > 0 && c.kind !== 'unknown');
   if (cycles.length < 2) return [];
   const shortest = Math.min(...cycles.map(c => c.days));
   return cycles.filter(c => c.kind === 'recorded' && c.days >= shortest * 2);
 };
 export const weightedCycles = (state) => {
   const intervals = cycleIntervals(state);
-  const recentLong = intervals.slice(-3).filter(c => c.kind === 'long' && !c.approximate && c.days > 0);
+  const recentLong = intervals.slice(-3).filter(c => c.kind === 'long' && c.days > 0);
   const restored = new Set(recentLong.length >= 2 ? recentLong.map(c => c.key) : []);
-  return intervals.filter(c => c.days > 0 && !c.approximate && c.kind !== 'unknown').map(c => ({
+  return intervals.filter(c => c.days > 0 && c.kind !== 'unknown').map(c => ({
     ...c, weight: c.kind === 'long' && !restored.has(c.key) ? 0.25 : 1
   }));
 };
