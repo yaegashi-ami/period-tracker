@@ -8,7 +8,7 @@
     <link rel="manifest" href="./manifest.webmanifest?v=20261002-standard-icons" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-choice-layout" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-rounded-arrows" />
     <title>period｜生理の記録</title>
     <script>
       (function(d) {
@@ -38,7 +38,7 @@
             <li><span aria-hidden="true">✦</span>排卵予定日を表示</li>
           </ul>
         </div>
-        <button id="start-button" class="start-button" type="button">自分のカレンダーを作る <span aria-hidden="true">❯</span></button>
+        <button id="start-button" class="start-button" type="button">自分のカレンダーを作る <svg class="button-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6" /></svg></button>
         <button id="start-import-button" class="secondary-button start-import-button" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3"/><path d="m7 8 5-5 5 5"/><path d="M4 14v6h16v-6"/></svg>
           記録をインポートして作成
@@ -73,7 +73,7 @@
           </label>
         </div>
         <p class="subtle">記録から計算した目安を表示します。</p>
-        <button id="welcome-next" class="primary-button" type="button">次へ <span aria-hidden="true">❯</span></button>
+        <button id="welcome-next" class="primary-button" type="button">次へ <svg class="button-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6" /></svg></button>
         <button id="welcome-back" class="secondary-button" type="button">戻る</button>
       </section>
 
@@ -96,7 +96,7 @@
             <p class="field-hint">入力した日数は、記録が少ないときの参考にします。空欄なら「不明」として保存します。</p>
           </div>
           <p id="setup-error" class="error-message" role="alert" hidden></p>
-          <button class="primary-button" type="submit">カレンダーを見る <span aria-hidden="true">❯</span></button>
+          <button class="primary-button" type="submit">カレンダーを見る <svg class="button-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6" /></svg></button>
           <button id="setup-back" class="secondary-button" type="button">戻る</button>
         </form>
       </section>
@@ -123,7 +123,7 @@
           <div class="calendar-edit-bar"><span class="edit-period">生理を編集</span><button id="date-action" class="date-action" type="button">生理開始</button></div>
           <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
-        <button id="gap-notice" class="gap-notice" type="button" aria-haspopup="dialog" hidden><span>記録が空いている期間があります</span><span aria-hidden="true">❯</span></button>
+        <button id="gap-notice" class="gap-notice" type="button" aria-haspopup="dialog" hidden><span>記録が空いている期間があります</span><svg class="button-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6" /></svg></button>
         <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
           周期を確認・編集する

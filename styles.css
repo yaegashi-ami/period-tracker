@@ -1090,11 +1090,6 @@ font-size: clamp(15px, 4vw, 18px);
   font-size: clamp(15px, 4vw, 18px);
 }
 
-.start-button span,
-.is-onboarding .primary-button>span {
-  font-size: 0.85em;
-}
-
 .start-button:hover {
   animation: transform-scale 0.3s ease-out;
   transition: background 0.3s ease, color 0.3s ease;
@@ -1169,11 +1164,17 @@ font-size: clamp(15px, 4vw, 18px);
   padding-bottom: 1px;
 }
 
-.primary-button>span,
-.start-button>span {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1;
+.button-chevron {
+  display: block;
+  width: 1.125em;
+  height: 1.125em;
+  flex: 0 0 auto;
+  align-self: center;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .month-title {
