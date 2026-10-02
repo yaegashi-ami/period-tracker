@@ -48,20 +48,20 @@
       <section id="setup-screen" class="screen" aria-labelledby="setup-title" hidden>
         <div class="setup-heading">
           <h1 id="setup-title" tabindex="-1">周期と開始日</h1>
-          <p>周期日数もしくは最近の生理開始日を追加してください。後から変更できます。</p>
+          <p>最近の生理開始日を入力し、周期日数を設定してください。不定期の場合はチェックできます。</p>
         </div>
         <form id="setup-form" novalidate>
+          <div class="form-card">
+            <div class="section-heading"><span class="field-title">最近の生理開始日<span class="required-badge">※必須</span></span><button id="add-start" type="button" class="text-button">＋ 日付を追加</button></div>
+            <p class="field-hint">新しい記録から入力してください。終了日はカレンダーから設定できます。</p>
+            <div id="start-date-list" class="date-list"></div>
+          </div>
           <div class="form-card">
             <label for="cycle-days" class="field-title">周期の日数</label>
             <div class="number-field"><input id="cycle-days" name="cycleDays" type="number" inputmode="numeric" min="1" max="365" placeholder="例：28" /><span>日</span></div>
             <p class="field-hint">入力の目安：短め 21〜25日 ／ 平均的 26〜30日 ／ 長め 31〜35日。ほかの日数も入力できます。</p>
             <label class="checkbox-line"><input id="irregular" name="irregular" type="checkbox" /> 周期が不定期</label>
             <p class="field-hint">不定期なら日数を空欄にしても進めます。</p>
-          </div>
-          <div class="form-card">
-            <div class="section-heading"><span class="field-title">最近の生理開始日</span><button id="add-start" type="button" class="text-button">＋ 日付を追加</button></div>
-            <p class="field-hint">新しい記録から入力してください。終了日はカレンダーから設定できます。</p>
-            <div id="start-date-list" class="date-list"></div>
           </div>
           <p id="setup-error" class="error-message" role="alert" hidden></p>
           <button class="primary-button" type="submit">カレンダーを見る <span aria-hidden="true">❯</span></button>

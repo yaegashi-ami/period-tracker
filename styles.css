@@ -881,7 +881,7 @@ body.start-active,
   align-items: center;
   gap: clamp(8px, 2vw, 16px);
   font-size: clamp(18px, 4.5vw, 34px);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.35;
   opacity: 0;
   animation: feature-appear 0.9s ease-out forwards;
@@ -1824,6 +1824,17 @@ body.onboarding-active,
   font-size: 14px;
   line-height: 1.75;
   color: #ddddea;
+}
+.required-badge {
+  margin-left: 4px;
+  padding: 1px 7px;
+  border: 1px solid #77833e;
+  border-radius: 999px;
+  background: #343b21;
+  color: #dcff62;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .completion-toast {
