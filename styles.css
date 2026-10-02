@@ -2246,9 +2246,22 @@ body.onboarding-active,
 .date-dialog {
   border: 1px solid var(--calendar-surface-border);
   border-radius: 24px;
-  background: var(--calendar-surface);
+  background: #191f29;
   color: #fff;
   box-shadow: 0 16px 48px #0005;
+}
+
+.date-dialog .primary-button {
+  min-height: 58px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #181822;
+  box-shadow: none;
+}
+
+.date-dialog .primary-button:hover {
+  background: #f1efff;
 }
 
 .cycle-button:hover,
