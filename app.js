@@ -1,4 +1,4 @@
-import { dayGap, shiftDay, recordAt, predict, recordedInMonth, overlaps } from "./calendar-model.mjs?v=20261002-halfyear";
+import { dayGap, shiftDay, recordAt, predict, recordedInMonth, overlaps, intervalKey, activeReviews, cycleIntervals, gapCandidates, weightedCycles } from "./calendar-model.mjs?v=20261002-gaps";
 const STORAGE_KEY = 'period-tracker-prototype-v1';
 const $ = (id) => document.getElementById(id);
 const todayISO = () => {
@@ -20,7 +20,7 @@ const dateLabel = (value) => {
   return `${year}年${month}月${day}日`;
 };
 const createId = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const emptyState = () => ({ version: 1, onboarded: false, cycleDays: null, irregular: false, showPremenstrual: true, showOvulation: true, periods: [] });
+const emptyState = () => ({ version: 1, onboarded: false, cycleDays: null, irregular: false, showPremenstrual: true, showOvulation: true, periods: [], intervalReviews: [] });
 const loadState = () => {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
@@ -36,7 +36,12 @@ let suppressDateClickUntil = 0;
 let editingId = null;
 let completionTimer;
 const save = () => {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); return true; }
+  try {
+    const next = { ...state, intervalReviews: activeReviews(state) };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    state = next;
+    return true;
+  }
   catch { showNotice('保存できませんでした。ブラウザの保存設定を確認してください。'); return false; }
 };
 const show = (screen) => {
@@ -102,14 +107,14 @@ $('setup-form').addEventListener('submit', (event) => {
 });
 
 const sortedPeriods = () => [...state.periods].sort((a, b) => b.start.localeCompare(a.start));
-const renderCalendar = () => {
+const renderCalendar = (promptGap = true) => {
   const year = displayedMonth.getFullYear(), month = displayedMonth.getMonth();
   $('month-label').textContent = `${year}年 ${month + 1}月 ▾`;
   $('month-label').setAttribute('aria-label', `${year}年${month + 1}月、年月を選ぶ`);
   const prediction = predict(state);
   $('ovulation-legend').hidden = !state.showOvulation;
   $('pms-legend').hidden = !state.showPremenstrual;
-  $('prediction-note').textContent = !prediction ? '開始日を記録すると予測が表示されます。' : state.periods.length === 1 && !(Number.isInteger(state.cycleDays) && state.cycleDays > 0) ? '28日周期で予測しています。' : '予測と各時期の表示は目安です。';
+  $('prediction-note').textContent = !prediction ? (state.periods.length > 1 ? '予測に使える周期がまだありません。' : '開始日を記録すると予測が表示されます。') : state.periods.length === 1 && !(Number.isInteger(state.cycleDays) && state.cycleDays > 0) ? '28日周期で予測しています。' : '予測と各時期の表示は目安です。';
   const firstWeekday = new Date(year, month, 1).getDay();
   const count = Math.ceil((firstWeekday + new Date(year, month + 1, 0).getDate()) / 7) * 7;
   const grid = $('calendar-grid'); grid.replaceChildren();
@@ -128,6 +133,7 @@ const renderCalendar = () => {
     const record = recordAt(state.periods, iso);
     if (record) {
       mark.classList.add('period-color');
+      if (record.period.approximate) labels.push('開始日はだいたいの日付');
       if (record.provisional) mark.style.backgroundColor = ['#ed1769','#ef2170','#f12b77','#f3357e','#f53f85'][record.offset];
       labels.push(record.provisional ? '生理、終了日未入力の仮表示' : '生理');
     } else if (prediction) {
@@ -148,6 +154,7 @@ const renderCalendar = () => {
   $('date-action').textContent = record ? '生理終了' : '生理開始';
   $('date-action').disabled = selectedDate > todayISO();
   $('date-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を${record ? '生理終了日' : '生理開始日'}にする`);
+  renderGapNotice(promptGap);
 };
 const moveMonth = delta => {
   displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + delta, 1);
@@ -184,6 +191,7 @@ const populateEdit = (id) => {
   const period = state.periods.find(p => p.id === id); if (!period) return;
   editingId = id; $('edit-record-select').value = id;
   $('edit-start').value = period.start; $('edit-end').value = period.end || '';
+  $('edit-approximate').checked = period.approximate === true;
   $('edit-start').max = todayISO(); $('edit-end').max = todayISO(); $('edit-end').min = period.start;
   showError('edit-error', '');
 };
@@ -199,6 +207,7 @@ $('save-edit').addEventListener('click', () => {
   else if (overlaps(state.periods, editingId, start, end)) error = 'ほかの生理の記録と日付が重なっています。';
   showError('edit-error', error); if (error) return;
   const previous = structuredClone(state); period.start = start; period.end = end;
+  period.approximate = $('edit-approximate').checked;
   if (!save()) { state = previous; return; }
   selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`);
   $('edit-dialog').close(); renderCalendar();
@@ -211,13 +220,29 @@ $('open-cycle').addEventListener('click', () => {
   const prediction = predict(state);
   $('cycle-summary').textContent = prediction
     ? `本命：${dayGap(records.at(-1).start, prediction.main)}日周期 ／ 対抗：${dayGap(records.at(-1).start, prediction.alternative)}日周期`
-    : '開始日を記録すると予測が表示されます。';
+    : '予測に使える周期がまだありません。';
   $('cycle-history').replaceChildren();
-  records.slice(1).map((record, i) => {
+  const candidates = new Set(gapCandidates(state).map(c => c.key));
+  const weights = new Map(weightedCycles(state).map(c => [c.key, c.weight]));
+  cycleIntervals(state).reverse().forEach(cycle => {
     const item = document.createElement('li');
-    item.textContent = `${records[i].start} 〜 ${record.start}：${dayGap(records[i].start, record.start)}日`;
-    return item;
-  }).reverse().forEach(item => $('cycle-history').append(item));
+    const range = document.createElement('span');
+    range.textContent = `${cycle.from} 〜 ${cycle.to}：${cycle.days}日間`;
+    item.append(range);
+    const status = document.createElement('small');
+    if (cycle.approximate) status.textContent = '開始日は目安・予測には使いません';
+    else if (cycle.kind === 'unknown') status.textContent = '記録不明・予測には使いません';
+    else if (cycle.kind === 'long') status.textContent = weights.get(cycle.key) < 1 ? '実際に長かった周期・影響を抑えて計算' : '長い周期が続いているため計算に反映';
+    else if (candidates.has(cycle.key)) status.textContent = 'まだ確認していない区間';
+    if (status.textContent) item.append(status);
+    if (!cycle.approximate && (cycle.kind !== 'recorded' || candidates.has(cycle.key))) {
+      const review = document.createElement('button');
+      review.type = 'button'; review.className = 'text-button'; review.textContent = '区間を確認';
+      review.addEventListener('click', () => { $('cycle-dialog').close(); openGap(cycle.key); });
+      item.append(review);
+    }
+    $('cycle-history').append(item);
+  });
   $('cycle-help').textContent = records.length >= 2
     ? '現在の予測は開始日の記録から計算しています。周期を修正する場合は開始日を修正してください。入力した日数は、開始日の記録が1回のときに使います。'
     : '開始日の記録が1回のときに使います。空欄の場合は28日で予測します。';
@@ -256,12 +281,94 @@ $('edit-cycle-records').addEventListener('click', () => {
   $('edit-record-select').replaceChildren(...records.map(record => {
     const option = document.createElement('option');
     option.value = record.id;
-    option.textContent = `${dateLabel(record.start)} 開始`;
+    option.textContent = `${dateLabel(record.start)}${record.approximate ? 'ごろ' : ''} 開始`;
     return option;
   }));
   populateEdit(records[0].id);
   $('cycle-dialog').close();
   $('edit-dialog').showModal();
+});
+let activeGapKey = null;
+let automaticGapShown = false;
+let gapPromptTimer;
+const getActiveGap = () => cycleIntervals(state).find(c => c.key === activeGapKey);
+const openGap = (key) => {
+  const gap = cycleIntervals(state).find(c => c.key === key);
+  if (!gap) return;
+  activeGapKey = key;
+  automaticGapShown = true;
+  const compactDate = iso => {
+    const [year, month, day] = iso.split('-').map(Number);
+    return `${gap.from.slice(0, 4) === gap.to.slice(0, 4) ? '' : `${year}年`}${month}月${day}日`;
+  };
+  $('gap-range').textContent = `${compactDate(gap.from)} — ${gap.days}日間 — ${compactDate(gap.to)}`;
+  $('gap-choices').hidden = false;
+  $('gap-date-form').hidden = true;
+  $('gap-start').value = '';
+  $('gap-start').min = shiftDay(gap.from, 1);
+  $('gap-start').max = shiftDay(gap.to, -1);
+  $('gap-approximate').checked = false;
+  showError('gap-error', '');
+  if (!$('gap-popover').matches(':popover-open')) $('gap-popover').showPopover();
+  $('gap-title').focus({ preventScroll: true });
+};
+const renderGapNotice = (prompt = true) => {
+  const candidates = gapCandidates(state);
+  $('gap-notice').hidden = !candidates.length;
+  if ($('gap-popover').matches(':popover-open') && !getActiveGap()) $('gap-popover').hidePopover();
+  clearTimeout(gapPromptTimer);
+  if (!prompt || automaticGapShown || !candidates.length) return;
+  const promptWhenReady = () => {
+    if (!$('completion-toast').hidden) { gapPromptTimer = setTimeout(promptWhenReady, 4200); return; }
+    if ($('calendar-screen').hidden || document.querySelector('dialog[open], [popover]:popover-open')) return;
+    const next = gapCandidates(state).at(-1);
+    if (next) openGap(next.key);
+  };
+  gapPromptTimer = setTimeout(promptWhenReady, 0);
+};
+$('gap-notice').addEventListener('click', () => {
+  const next = gapCandidates(state).at(-1);
+  if (next) openGap(next.key);
+});
+$('close-gap').addEventListener('click', () => $('gap-popover').hidePopover());
+$('gap-add').addEventListener('click', () => {
+  $('gap-choices').hidden = true;
+  $('gap-date-form').hidden = false;
+  showError('gap-error', '');
+});
+$('gap-back').addEventListener('click', () => {
+  $('gap-choices').hidden = false;
+  $('gap-date-form').hidden = true;
+  showError('gap-error', '');
+});
+const saveGapReview = (kind) => {
+  const gap = getActiveGap();
+  if (!gap) { showError('gap-error', '記録が変更されました。区間を選び直してください。'); return; }
+  const previous = structuredClone(state);
+  state.intervalReviews = activeReviews(state).filter(r => intervalKey(r.from, r.to) !== gap.key);
+  state.intervalReviews.push({ from: gap.from, to: gap.to, kind });
+  if (!save()) { state = previous; showError('gap-error', '保存できませんでした。もう一度お試しください。'); return; }
+  $('gap-popover').hidePopover();
+  renderCalendar(false);
+};
+$('gap-unknown').addEventListener('click', () => saveGapReview('unknown'));
+$('gap-long').addEventListener('click', () => saveGapReview('long'));
+$('gap-date-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const gap = getActiveGap(), start = $('gap-start').value;
+  let error = '';
+  if (!gap) error = '記録が変更されました。区間を選び直してください。';
+  else if (!validISO(start) || start <= gap.from || start >= gap.to || start > todayISO()) error = 'この区間の中から開始日を選んでください。';
+  else if (overlaps(state.periods, null, start, null)) error = 'ほかの生理の記録と日付が重なっています。';
+  showError('gap-error', error);
+  if (error) return;
+  const previous = structuredClone(state);
+  state.periods.push({ id: createId(), start, end: null, approximate: $('gap-approximate').checked });
+  if (!save()) { state = previous; showError('gap-error', '保存できませんでした。もう一度お試しください。'); return; }
+  $('gap-popover').hidePopover();
+  displayedMonth = new Date(`${start}T12:00:00`);
+  selectedDate = start; hasSelectedDate = true;
+  renderCalendar(false);
 });
 const syncVisibility = () => {
   $('settings-premenstrual').checked = state.showPremenstrual;

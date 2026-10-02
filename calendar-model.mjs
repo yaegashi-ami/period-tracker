@@ -19,21 +19,64 @@ const sixMonthsBefore = (iso) => {
   first.setUTCDate(Math.min(day, lastDay));
   return first.toISOString().slice(0, 10);
 };
+// 区間の判断は隣り合う開始日の組に結び付ける。日付変更・記録追加後は持ち越さない。
+export const intervalKey = (from, to) => `${from}/${to}`;
+export const activeReviews = (state) => {
+  const records = ordered(state.periods);
+  const keys = new Set(records.slice(1).map((p, i) => intervalKey(records[i].start, p.start)));
+  return (Array.isArray(state.intervalReviews) ? state.intervalReviews : []).filter(review =>
+    review && ['unknown', 'long'].includes(review.kind) && keys.has(intervalKey(review.from, review.to))
+  );
+};
+export const cycleIntervals = (state) => {
+  const records = ordered(state.periods);
+  const reviews = new Map(activeReviews(state).map(review => [intervalKey(review.from, review.to), review.kind]));
+  return records.slice(1).map((record, i) => {
+    const from = records[i].start, to = record.start, key = intervalKey(from, to);
+    return { key, from, to, days: dayGap(from, to), kind: reviews.get(key) ?? 'recorded',
+      approximate: records[i].approximate === true || record.approximate === true };
+  });
+};
+export const gapCandidates = (state) => {
+  const cycles = cycleIntervals(state).filter(c => c.days > 0 && !c.approximate && c.kind !== 'unknown');
+  if (cycles.length < 2) return [];
+  const shortest = Math.min(...cycles.map(c => c.days));
+  return cycles.filter(c => c.kind === 'recorded' && c.days >= shortest * 2);
+};
+export const weightedCycles = (state) => {
+  const intervals = cycleIntervals(state);
+  const recentLong = intervals.slice(-3).filter(c => c.kind === 'long' && !c.approximate && c.days > 0);
+  const restored = new Set(recentLong.length >= 2 ? recentLong.map(c => c.key) : []);
+  return intervals.filter(c => c.days > 0 && !c.approximate && c.kind !== 'unknown').map(c => ({
+    ...c, weight: c.kind === 'long' && !restored.has(c.key) ? 0.25 : 1
+  }));
+};
+const weightedMedian = (cycles) => {
+  const values = [...cycles].sort((a, b) => a.days - b.days);
+  const middle = values.reduce((sum, c) => sum + c.weight, 0) / 2;
+  let total = 0;
+  for (let i = 0; i < values.length; i++) {
+    total += values[i].weight;
+    if (total > middle) return values[i].days;
+    if (total === middle) return (values[i].days + values[i + 1].days) / 2;
+  }
+};
 export const predict = (state) => {
   const records = ordered(state.periods);
   if (!records.length) return null;
   const latest = records.at(-1).start;
-  const cycles = records.slice(1).map((p, i) => ({ days: dayGap(records[i].start, p.start), start: records[i].start }));
-  const recent = cycles.slice(-3).map(c => c.days).sort((a, b) => a - b);
+  const cycles = weightedCycles(state);
+  // 不明な区間しかないときに、初期値の28日へ戻して予測を作らない。
+  if (records.length > 1 && !cycles.length) return null;
   const fallback = Number.isInteger(state.cycleDays) && state.cycleDays > 0 ? state.cycleDays : 28;
-  const median = recent.length ? (recent[Math.floor((recent.length - 1) / 2)] + recent[Math.floor(recent.length / 2)]) / 2 : fallback;
-  const halfYear = cycles.filter(c => c.start >= sixMonthsBefore(latest));
-  const average = halfYear.length ? halfYear.reduce((sum, c) => sum + c.days, 0) / halfYear.length : median;
-  if (!median && !average) return null;
-  const main = median ? shiftDay(latest, Math.round(median)) : null;
-  return { main, alternative: average ? shiftDay(latest, Math.round(average)) : null,
-    ovulation: main ? shiftDay(main, -14) : null, pmsFrom: main ? shiftDay(main, -10) : null,
-    pmsTo: main ? shiftDay(main, -3) : null };
+  const median = cycles.length ? weightedMedian(cycles.slice(-3)) : fallback;
+  const halfYear = cycles.filter(c => c.from >= sixMonthsBefore(latest));
+  const average = halfYear.length
+    ? halfYear.reduce((sum, c) => sum + c.days * c.weight, 0) / halfYear.reduce((sum, c) => sum + c.weight, 0)
+    : median;
+  const main = shiftDay(latest, Math.round(median));
+  return { main, alternative: shiftDay(latest, Math.round(average)),
+    ovulation: shiftDay(main, -14), pmsFrom: shiftDay(main, -10), pmsTo: shiftDay(main, -3) };
 };
 export const recordedInMonth = (periods, year, month) => {
   const first = `${year}-${String(month + 1).padStart(2, '0')}-01`;

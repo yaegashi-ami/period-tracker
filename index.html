@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#2922ca" />
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" href="./assets/logo.png" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-halfyear" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-gaps" />
     <title>period｜生理の記録</title>
   </head>
   <body>
@@ -91,12 +91,14 @@
           <div class="calendar-edit-bar"><span class="edit-period">生理を編集</span><button id="date-action" class="date-action" type="button">生理開始</button></div>
           <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
+        <button id="gap-notice" class="gap-notice" type="button" aria-haspopup="dialog" hidden><span>記録が空いている期間があります</span><span aria-hidden="true">❯</span></button>
         <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">周期を確認・編集する <span aria-hidden="true">❯</span></button>
         <p id="prediction-note" class="prediction-note"></p>
         <dl class="prediction-rules">
           <div><dt>本命</dt><dd>直近3周期の中央値で計算。</dd></div>
           <div><dt>対抗</dt><dd>過去半年の周期の平均で計算。</dd></div>
         </dl>
+        <p class="prediction-rules">日付が不明な区間は除外。単発の長い周期は影響を抑え、続く場合は計算に反映します。</p>
       </section>
     </main>
 
@@ -121,11 +123,31 @@
         <div class="dialog-header"><h2 id="edit-title">記録を修正</h2><button id="close-edit" class="icon-button" type="button" aria-label="閉じる">×</button></div>
         <label class="edit-field">編集する生理<select id="edit-record-select"></select></label>
         <label class="edit-field">開始日<input id="edit-start" type="date" required /></label>
+        <label class="checkbox-line"><input id="edit-approximate" type="checkbox" /> だいたいの開始日</label>
+        <p class="dialog-help">だいたいの日付は、前後の周期を予測の計算から外します。</p>
         <label class="edit-field">終了日 <span class="optional">（未入力でもOK）</span><input id="edit-end" type="date" /></label>
         <p id="edit-error" class="error-message" role="alert" hidden></p>
         <button id="save-edit" class="primary-button" type="button">保存する</button>
       </form>
     </dialog>
+
+    <div id="gap-popover" class="gap-popover" popover="auto" role="dialog" aria-labelledby="gap-title" aria-describedby="gap-range">
+      <div class="gap-heading"><h2 id="gap-title" tabindex="-1">記録が空いている期間があります</h2><button id="close-gap" class="icon-button" type="button" aria-label="閉じる">×</button></div>
+      <p id="gap-range" class="gap-range"></p>
+      <div id="gap-choices" class="gap-choices">
+        <button id="gap-add" type="button"><strong>記録し忘れた</strong><small>開始日を追加します</small></button>
+        <button id="gap-unknown" type="button"><strong>生理は来たが、日付を忘れた</strong><small>記録不明として予測から外します</small></button>
+        <button id="gap-long" type="button"><strong>実際に生理が来なかった</strong><small>長かった周期として残します</small></button>
+      </div>
+      <form id="gap-date-form" hidden novalidate>
+        <label class="edit-field">生理開始日<input id="gap-start" type="date" required /></label>
+        <label class="checkbox-line"><input id="gap-approximate" type="checkbox" /> だいたいこの辺</label>
+        <p class="dialog-help">だいたいの日付は、前後の周期を予測の計算から外します。</p>
+        <button class="primary-button" type="submit">追加する</button>
+        <button id="gap-back" class="secondary-button" type="button">戻る</button>
+      </form>
+      <p id="gap-error" class="error-message" role="alert" hidden></p>
+    </div>
 
     <div id="settings-popover" class="visibility-popover" popover="auto" aria-label="カレンダーに表示する目安">
       <label><input id="settings-premenstrual" type="checkbox" />PMSが出やすい時期</label>
@@ -139,6 +161,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-halfyear"></script>
+    <script type="module" src="./app.js?v=20261002-gaps"></script>
   </body>
 </html>

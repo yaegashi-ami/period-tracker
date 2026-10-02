@@ -1948,3 +1948,119 @@ body.onboarding-active,
 #setup-title:focus {
   outline: none;
 }
+
+.gap-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--calendar-surface-border);
+  border-radius: 18px;
+  background: var(--calendar-surface);
+  color: #d4deef;
+  text-align: left;
+  font-size: 14px;
+}
+.gap-popover {
+  position: fixed;
+  inset: auto;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  width: min(360px, calc(100% - 24px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 18px;
+  border: 1px solid var(--calendar-surface-border);
+  border-radius: 24px;
+  background: var(--calendar-surface);
+  color: #fff;
+  box-shadow: 0 8px 32px #0005;
+}
+.gap-popover::backdrop {
+  background: transparent;
+}
+.gap-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.gap-heading h2 {
+  text-wrap: balance;
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.gap-heading .icon-button {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  background: transparent;
+}
+.gap-range {
+  margin: 12px 0;
+  font-size: 13px;
+  color: #c1cde0;
+}
+.gap-choices {
+  display: grid;
+  gap: 4px;
+}
+.gap-choices button {
+  padding: 12px 10px;
+  background: transparent;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  text-align: left;
+}
+.gap-choices button:hover {
+  background: var(--calendar-surface-hover);
+}
+.gap-choices strong,
+.gap-choices small {
+  display: block;
+}
+.gap-choices strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+.gap-choices small {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #b8c5d9;
+}
+.gap-popover input[type="date"] {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+}
+.gap-popover .checkbox-line {
+  font-size: 14px;
+}
+.cycle-history li {
+  margin-bottom: 12px;
+}
+.cycle-history small {
+  display: block;
+  color: #afc3df;
+  font-size: 12px;
+}
+.cycle-history .text-button {
+  min-height: 36px;
+  padding: 4px 0;
+}
+p.prediction-rules {
+  margin-top: 8px;
+}
+
+#gap-title:focus {
+  outline: none;
+}
