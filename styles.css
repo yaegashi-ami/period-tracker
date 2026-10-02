@@ -2006,7 +2006,7 @@ body.onboarding-active,
 }
 
 .cycle-button:hover {
-  background: var(--calendar-surface-hover);
+  background: rgb(255 255 255 / 12%);
 }
 
 .cycle-history {
