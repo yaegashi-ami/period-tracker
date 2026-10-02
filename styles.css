@@ -155,7 +155,7 @@ h2 {
 .calendar-card {
   padding: 18px 14px;
   border-radius: 24px;
-  background: var(--calendar-surface);
+  background: rgb(255 255 255 / 8%);
   color: #fff;
 }
 
@@ -604,7 +604,7 @@ h2 {
   border-radius: 24px;
   padding: 22px;
   box-shadow: 0 16px 48px #0005;
-  background: #191f29;
+  background: #181822;
   color: #fff;
 }
 
@@ -1987,7 +1987,7 @@ body.onboarding-active,
   padding: 16px 20px;
   border: 1px solid var(--calendar-surface-border);
   border-radius: 12px;
-  background: var(--calendar-surface);
+  background: rgb(255 255 255 / 8%);
   color: #fff;
   font-size: 15px;
   font-weight: 400;
@@ -2072,7 +2072,7 @@ body.onboarding-active,
 }
 
 #settings-button {
-  background: var(--calendar-surface);
+  background: rgb(255 255 255 / 8%);
   border-color: var(--calendar-surface-border);
   color: #fff;
 }
@@ -2091,7 +2091,7 @@ body.onboarding-active,
 }
 
 #settings-button:hover {
-  background: var(--calendar-surface-hover);
+  background: rgb(255 255 255 / 13%);
 }
 
 .prediction-rules {
