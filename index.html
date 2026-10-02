@@ -48,7 +48,7 @@
       <section id="setup-screen" class="screen" aria-labelledby="setup-title" hidden>
         <div class="setup-heading">
           <h1 id="setup-title" tabindex="-1">周期と開始日</h1>
-          <p>最近の生理開始日を入力し、周期日数を設定してください。不定期の場合はチェックできます。</p>
+          <p>最近の生理開始日は必須です。周期が分からない場合は、日数を空欄にして進めます。</p>
         </div>
         <form id="setup-form" novalidate>
           <div class="form-card">
@@ -57,11 +57,10 @@
             <div id="start-date-list" class="date-list"></div>
           </div>
           <div class="form-card">
-            <label for="cycle-days" class="field-title">周期の日数</label>
+            <label for="cycle-days" class="field-title">周期の日数（任意）</label>
             <div class="number-field"><input id="cycle-days" name="cycleDays" type="number" inputmode="numeric" min="1" max="365" placeholder="例：28" /><span>日</span></div>
             <p class="field-hint">入力の目安：短め 21〜25日 ／ 平均的 26〜30日 ／ 長め 31〜35日。ほかの日数も入力できます。</p>
-            <label class="checkbox-line"><input id="irregular" name="irregular" type="checkbox" /> 周期が不定期</label>
-            <p class="field-hint">不定期なら日数を空欄にしても進めます。</p>
+            <p class="field-hint">入力した日数は、記録が少ないときの参考にします。空欄なら「不明」として保存します。</p>
           </div>
           <p id="setup-error" class="error-message" role="alert" hidden></p>
           <button class="primary-button" type="submit">カレンダーを見る <span aria-hidden="true">❯</span></button>
@@ -107,9 +106,8 @@
         <div class="dialog-header"><h2 id="cycle-title">周期を確認・編集</h2><button id="close-cycle" class="icon-button" type="button" aria-label="閉じる">×</button></div>
         <p id="cycle-summary" class="dialog-help"></p>
         <ul id="cycle-history" class="cycle-history"></ul>
-        <label for="edit-cycle-days" class="edit-field">周期の日数</label>
+        <label for="edit-cycle-days" class="edit-field">周期の日数（任意）</label>
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
-        <label class="checkbox-line"><input id="edit-irregular" type="checkbox" /> 周期が不定期</label>
         <p id="cycle-help" class="dialog-help"></p>
         <button id="edit-cycle-records" class="text-button" type="button">開始日・終了日を修正</button>
         <p id="cycle-error" class="error-message" role="alert" hidden></p>
@@ -161,6 +159,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-gaps"></script>
+    <script type="module" src="./app.js?v=20261002-cycle-optional"></script>
   </body>
 </html>

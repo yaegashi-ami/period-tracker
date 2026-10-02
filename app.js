@@ -20,12 +20,15 @@ const dateLabel = (value) => {
   return `${year}年${month}月${day}日`;
 };
 const createId = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const emptyState = () => ({ version: 1, onboarded: false, cycleDays: null, irregular: false, showPremenstrual: true, showOvulation: true, periods: [], intervalReviews: [] });
+const emptyState = () => ({ version: 1, onboarded: false, cycleDays: null, cycleUnknown: true, showPremenstrual: true, showOvulation: true, periods: [], intervalReviews: [] });
 const loadState = () => {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
     if (!parsed || parsed.version !== 1 || !Array.isArray(parsed.periods)) return emptyState();
-    return { ...emptyState(), ...parsed, periods: parsed.periods.filter((p) => validISO(p.start) && (!p.end || validISO(p.end))) };
+    const cycleDays = Number.isInteger(parsed.cycleDays) && parsed.cycleDays > 0 ? parsed.cycleDays : null;
+    const stored = { ...parsed };
+    delete stored.irregular;
+    return { ...emptyState(), ...stored, cycleDays, cycleUnknown: parsed.cycleUnknown === true || cycleDays === null, periods: parsed.periods.filter((p) => validISO(p.start) && (!p.end || validISO(p.end))) };
   } catch { return emptyState(); }
 };
 let state = loadState();
@@ -81,22 +84,20 @@ $('welcome-next').addEventListener('click', () => {
 });
 $('setup-back').addEventListener('click', () => show('welcome-screen'));
 $('add-start').addEventListener('click', () => { addStartRow(); $('start-date-list').lastElementChild.querySelector('input').focus(); });
-$('irregular').addEventListener('change', () => { $('cycle-days').required = !$('irregular').checked; });
 $('setup-form').addEventListener('submit', (event) => {
   event.preventDefault();
   const rawCycle = $('cycle-days').value.trim();
   const cycle = rawCycle === '' ? null : Number(rawCycle);
-  const irregular = $('irregular').checked;
+  const cycleUnknown = cycle === null;
   const starts = [...$('start-date-list').querySelectorAll('input')].map((input) => input.value).filter(Boolean);
   let error = '';
-  if (!irregular && cycle === null) error = '周期の日数を入力するか、「周期が不定期」を選んでください。';
-  else if (cycle !== null && (!Number.isInteger(cycle) || cycle < 1 || cycle > 365)) error = '周期は1〜365日の数字で入力してください。';
+  if (cycle !== null && (!Number.isInteger(cycle) || cycle < 1 || cycle > 365)) error = '周期は1〜365日の数字で入力してください。';
   else if (!starts.length) error = '生理開始日を1件以上入力してください。';
   else if (starts.some((start) => !validISO(start) || start > todayISO())) error = '生理開始日は今日以前の日付を選んでください。';
   else if (new Set(starts).size !== starts.length) error = '同じ開始日が重複しています。';
   showError('setup-error', error);
   if (error) return;
-  state = { version: 1, onboarded: true, cycleDays: cycle, irregular, showPremenstrual: $('show-premenstrual').checked, showOvulation: $('show-ovulation').checked, periods: starts.map((start) => ({ id: createId(), start, end: null })) };
+  state = { version: 1, onboarded: true, cycleDays: cycleUnknown ? null : cycle, cycleUnknown, showPremenstrual: $('show-premenstrual').checked, showOvulation: $('show-ovulation').checked, periods: starts.map((start) => ({ id: createId(), start, end: null })) };
   if (!save()) return;
   displayedMonth = new Date();
   renderCalendar();
@@ -214,7 +215,6 @@ $('save-edit').addEventListener('click', () => {
 });
 $('open-cycle').addEventListener('click', () => {
   $('edit-cycle-days').value = state.cycleDays ?? '';
-  $('edit-irregular').checked = state.irregular;
   showError('cycle-error', '');
   const records = sortedPeriods().reverse();
   const prediction = predict(state);
@@ -244,8 +244,8 @@ $('open-cycle').addEventListener('click', () => {
     $('cycle-history').append(item);
   });
   $('cycle-help').textContent = records.length >= 2
-    ? '現在の予測は開始日の記録から計算しています。周期を修正する場合は開始日を修正してください。入力した日数は、開始日の記録が1回のときに使います。'
-    : '開始日の記録が1回のときに使います。空欄の場合は28日で予測します。';
+    ? '開始日が2件以上ある場合は、記録した周期を使って予測します。入力した日数は、開始日が1件のときの参考にします。'
+    : '入力した日数は予測の参考です。空欄は「不明」として保存し、開始日が1件だけなら28日周期を参考にします。';
   $('edit-cycle-records').hidden = records.length === 0;
   $('cycle-dialog').showModal();
 });
@@ -269,8 +269,8 @@ $('cycle-form').addEventListener('submit', event => {
     return;
   }
   const previous = structuredClone(state);
-  state.cycleDays = days;
-  state.irregular = $('edit-irregular').checked;
+  state.cycleUnknown = days === null;
+  state.cycleDays = state.cycleUnknown ? null : days;
   if (!save()) { state = previous; return; }
   $('cycle-dialog').close();
   renderCalendar();
