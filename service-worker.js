@@ -1,4 +1,4 @@
-const CACHE_NAME = 'period-tracker-shell-v10';
+const CACHE_NAME = 'period-tracker-shell-v11';
 const SHELL_FILES = [
   './',
   './index.html',
@@ -25,28 +25,35 @@ self.addEventListener('activate', event => {
   );
 });
 
+// 通信できるときは再検証し、オフライン時だけ保存済みのファイルを使う。
 self.addEventListener('fetch', event => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy));
-      return response;
-    }).catch(() => caches.match('./index.html')));
-    return;
-  }
+  const cacheKey = request.mode === 'navigate'
+    ? new URL('./index.html', self.registration.scope)
+    : new URL(request.url);
+  cacheKey.search = '';
 
-  event.respondWith(caches.match(request, { ignoreSearch: true }).then(cached => {
-    if (cached) return cached;
-    return fetch(request).then(response => {
-      if (response.ok) {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
-      }
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    let response;
+    try {
+      response = await fetch(new Request(request, { cache: 'no-cache' }));
+    } catch (error) {
+      const cached = await cache.match(cacheKey.href);
+      if (cached) return cached;
+      throw error;
+    }
+
+    if (response.ok) {
+      // 保存に失敗しても、取得できた最新版は表示する。
+      try {
+        await cache.put(cacheKey.href, response.clone());
+      } catch {}
       return response;
-    });
-  }));
+    }
+    return (await cache.match(cacheKey.href)) || response;
+  })());
 });
