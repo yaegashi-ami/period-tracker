@@ -68,6 +68,12 @@ const show = (screen) => {
 };
 const showNotice = (message) => { $('app-notice').textContent = message; $('app-notice').hidden = false; };
 const showError = (id, message) => { const node = $(id); node.textContent = message; node.hidden = !message; };
+const showCompletion = (message) => {
+  $('completion-message').textContent = message;
+  $('completion-toast').hidden = false;
+  clearTimeout(completionTimer);
+  completionTimer = setTimeout(() => { $('completion-toast').hidden = true; }, 4000);
+};
 const addStartRow = (value = '') => {
   const row = document.createElement('div'); row.className = 'date-row';
   const input = document.createElement('input'); input.type = 'date'; input.max = todayISO(); input.value = value; input.setAttribute('aria-label', '生理開始日');
@@ -76,7 +82,131 @@ const addStartRow = (value = '') => {
   row.append(input, remove); $('start-date-list').append(row);
 };
 
+const decodeBackup = (backup) => {
+  if (backup?.format !== 'period-tracker-backup' || backup.formatVersion !== 1) {
+    throw new Error('このアプリでエクスポートしたバックアップを選んでください。');
+  }
+  const data = backup.data;
+  if (!data || data.version !== 1 || data.onboarded !== true || !Array.isArray(data.periods) || data.periods.length === 0 || data.periods.length > 2000) {
+    throw new Error('バックアップの内容を確認できません。');
+  }
+  const cycleDays = data.cycleDays === null ? null : data.cycleDays;
+  if (cycleDays !== null && (!Number.isInteger(cycleDays) || cycleDays < 1 || cycleDays > 365)) {
+    throw new Error('周期の日数が正しくありません。');
+  }
+  if (typeof data.cycleUnknown !== 'boolean' || data.cycleUnknown !== (cycleDays === null)
+    || typeof data.showPremenstrual !== 'boolean' || typeof data.showOvulation !== 'boolean') {
+    throw new Error('設定の内容を確認できません。');
+  }
+  const periodIds = new Set();
+  const periods = data.periods.map((period) => {
+    if (!period || typeof period !== 'object' || !validISO(period.start) || period.start > todayISO()) {
+      throw new Error('生理開始日の記録を確認できません。');
+    }
+    const end = period.end || null;
+    if (end && (!validISO(end) || end < period.start || end > todayISO())) {
+      throw new Error('生理終了日の記録を確認できません。');
+    }
+    if (period.approximate !== undefined && typeof period.approximate !== 'boolean') {
+      throw new Error('開始日の設定を確認できません。');
+    }
+    let id = typeof period.id === 'string' && period.id.length > 0 && period.id.length <= 120 && !periodIds.has(period.id)
+      ? period.id
+      : createId();
+    while (periodIds.has(id)) id = createId();
+    periodIds.add(id);
+    return {
+      id,
+      start: period.start,
+      end,
+      ...(period.approximate === true ? { approximate: true } : {}),
+    };
+  }).sort((a, b) => a.start.localeCompare(b.start));
+  for (let i = 1; i < periods.length; i++) {
+    if (periods[i].start === periods[i - 1].start || (periods[i - 1].end && periods[i].start <= periods[i - 1].end)) {
+      throw new Error('日付が重複している記録があります。');
+    }
+  }
+  const rawReviews = data.intervalReviews ?? [];
+  if (!Array.isArray(rawReviews) || rawReviews.length > 2000 || rawReviews.some(review =>
+    !review || !validISO(review.from) || !validISO(review.to) || review.from >= review.to || !['unknown', 'long'].includes(review.kind)
+  )) {
+    throw new Error('記録の確認内容を読み込めません。');
+  }
+  const restored = {
+    version: 1,
+    onboarded: true,
+    cycleDays,
+    cycleUnknown: data.cycleUnknown,
+    showPremenstrual: data.showPremenstrual,
+    showOvulation: data.showOvulation,
+    periods,
+    intervalReviews: rawReviews.map(({ from, to, kind }) => ({ from, to, kind })),
+  };
+  restored.intervalReviews = activeReviews(restored);
+  return restored;
+};
+
 $('start-button').addEventListener('click', () => show('welcome-screen'));
+$('start-import-button').addEventListener('click', () => $('import-file').click());
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files?.[0];
+  event.target.value = '';
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showNotice('ファイルが大きすぎます。バックアップファイルを確認してください。');
+    return;
+  }
+  let imported;
+  try {
+    imported = decodeBackup(JSON.parse(await file.text()));
+  } catch (error) {
+    showNotice(error instanceof SyntaxError ? 'JSONファイルを読み込めません。バックアップファイルを確認してください。' : error.message);
+    return;
+  }
+  if (state.periods.length && !window.confirm('このブラウザの記録を、読み込むバックアップの内容に置き換えます。続けますか？')) return;
+  const previous = state;
+  state = imported;
+  if (!save()) { state = previous; return; }
+  displayedMonth = new Date();
+  selectedDate = todayISO();
+  hasSelectedDate = false;
+  renderCalendar();
+  $('app-notice').hidden = true;
+  show('calendar-screen');
+  showCompletion('記録を読み込みました');
+});
+$('export-records').addEventListener('click', () => {
+  const backup = {
+    format: 'period-tracker-backup',
+    formatVersion: 1,
+    exportedAt: new Date().toISOString(),
+    data: {
+      version: 1,
+      onboarded: true,
+      cycleDays: state.cycleDays,
+      cycleUnknown: state.cycleUnknown,
+      showPremenstrual: state.showPremenstrual,
+      showOvulation: state.showOvulation,
+      periods: state.periods.map(period => ({
+        id: period.id,
+        start: period.start,
+        end: period.end || null,
+        ...(period.approximate ? { approximate: true } : {}),
+      })),
+      intervalReviews: activeReviews(state),
+    },
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `period-tracker-${todayISO()}.json`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
 $('welcome-back').addEventListener('click', () => show('start-screen'));
 $('welcome-next').addEventListener('click', () => {
   show('setup-screen');
@@ -102,9 +232,7 @@ $('setup-form').addEventListener('submit', (event) => {
   displayedMonth = new Date();
   renderCalendar();
   show('calendar-screen');
-  clearTimeout(completionTimer);
-  $('completion-toast').hidden = false;
-  completionTimer = setTimeout(() => { $('completion-toast').hidden = true; }, 4000);
+  showCompletion('カレンダーができました');
 });
 
 const sortedPeriods = () => [...state.periods].sort((a, b) => b.start.localeCompare(a.start));

@@ -124,19 +124,6 @@ h2 {
   color: #242281;
 }
 
-.lead {
-  max-width: 52ch;
-  margin: 18px 0 28px;
-  color: #686783;
-  font-size: 15px;
-  line-height: 1.8;
-}
-
-.lead.compact {
-  margin: 7px 0 0;
-  font-size: 13px;
-}
-
 .choice-card {
   border-radius: 24px;
   background: rgb(255 255 255 / 8%);
@@ -262,9 +249,7 @@ h2 {
 
 .field-title {
   display: block;
-  color: #303087;
   font-size: 15px;
-  font-weight: 700;
   margin: 0 0 12px;
 }
 
@@ -327,6 +312,30 @@ h2 {
   font-weight: 400;
   font-size: 13px;
   padding: 7px;
+}
+
+.export-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  min-height: 44px;
+  margin: 18px 4px 0;
+  padding: 8px 0;
+  color: #c8c8e0;
+  text-align: left;
+}
+
+.export-button svg,
+.start-import-button svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .date-list {
@@ -1002,7 +1011,7 @@ h2 {
 .start-button {
   min-height: 58px;
   padding: 10px 4px;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   border-radius: 999px;
   width: 90%;
   border: 0;
@@ -1010,12 +1019,27 @@ h2 {
   color: #181822;
   background: #fff;
   font-size: clamp(20px, 5vw, 38px);
-  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(8px, 2vw, 18px);
   white-space: nowrap;
+}
+
+.start-import-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 90%;
+  min-height: 52px;
+  margin: 0 0 24px;
+  padding: 10px 14px;
+  border: 1px solid rgb(255 255 255 / 55%);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font-size: clamp(15px, 4vw, 18px);
 }
 
 .start-button span,
@@ -1374,7 +1398,6 @@ h2 {
 .subtle,
 .field-hint,
 .choice-row small,
-.lead,
 .record-row small,
 .optional,
 .dialog-help,
@@ -1641,15 +1664,8 @@ body.start-active,
 }
 
 .start-features li {
-  font-size: clamp(16px, 4.5vw, 22px);
-}
-
-.start-button {
-  min-height: 52px;
-  font-size: 18px;
-  margin-bottom: 24px;
-  flex-shrink: 0;
-  font-weight: 800;
+  font-size: clamp(16px, 4vw, 22px);
+  letter-spacing: 0.2rem;
 }
 
 /* 初期設定はスタート画面と同じトーンでつなぐ。 */
@@ -1676,21 +1692,15 @@ body.onboarding-active,
 .is-onboarding h1 {
   font-size: 26px;
   line-height: 1.5;
-  letter-spacing: 0;
   color: #fff;
 }
 
-.is-onboarding .lead,
 .is-onboarding .field-hint,
 .is-onboarding .subtle,
 .is-onboarding .choice-row small {
   font-size: 15px;
   line-height: 1.75;
   color: #ddddea;
-}
-
-.is-onboarding .lead {
-  margin: 12px 0 24px;
 }
 
 .is-onboarding .choice-card,
@@ -1852,13 +1862,12 @@ body.onboarding-active,
 
 .is-onboarding .setup-heading {
   display: grid;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 24px;
 }
 
 .is-onboarding .setup-heading h1 {
   margin: 0;
-  font-size: clamp(20px, 6vw, 26px);
   white-space: nowrap;
 }
 
@@ -2075,10 +2084,6 @@ body.onboarding-active,
 
 .prediction-rules dd {
   margin: 0;
-}
-
-#setup-title:focus {
-  outline: none;
 }
 
 .gap-notice {
