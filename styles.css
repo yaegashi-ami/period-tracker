@@ -2241,7 +2241,8 @@ body.onboarding-active,
 }
 
 .cycle-history li {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
 }
 
 .cycle-history small {
