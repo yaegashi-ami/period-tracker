@@ -1066,7 +1066,7 @@ h2 {
   background: transparent;
   color: #181822;
   background: #fff;
-  font-size: clamp(20px, 5vw, 38px);
+font-size: clamp(15px, 4vw, 18px);
   display: flex;
   align-items: center;
   justify-content: center;
