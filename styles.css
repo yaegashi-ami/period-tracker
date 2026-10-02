@@ -375,6 +375,7 @@ h2 {
   justify-content: space-between;
   align-items: center;
   margin: 0 0 15px;
+  padding-inline: 8px;
 }
 
 .month-nav h2 {
@@ -1136,6 +1137,7 @@ body.start-active,
 
 .calendar-card .legend {
   margin: 12px 4px 22px;
+  padding-inline: 8px;
   gap: 9px 14px;
   line-height: 1.5;
 }
