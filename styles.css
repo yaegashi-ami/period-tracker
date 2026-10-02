@@ -1827,14 +1827,7 @@ body.onboarding-active,
 }
 .required-badge {
   margin-left: 4px;
-  padding: 1px 7px;
-  border: 1px solid #77833e;
-  border-radius: 999px;
-  background: #343b21;
   color: #dcff62;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
 }
 
 .completion-toast {
