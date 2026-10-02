@@ -594,6 +594,22 @@ h2 {
   background: #000000bd;
 }
 
+#cycle-dialog[open] {
+  animation: modal-enter 180ms ease-out both;
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .dialog-header {
   display: flex;
   justify-content: space-between;
@@ -1917,6 +1933,7 @@ body.onboarding-active,
   color: #fff;
   font-size: 15px;
   font-weight: 400;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .cycle-button svg {
