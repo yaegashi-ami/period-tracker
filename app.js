@@ -352,7 +352,7 @@ const renderCycleHistory = () => {
 };
 $('cycle-form').addEventListener('submit', event => { event.preventDefault(); saveCycleAndRecord(); });
 $('edit-form').addEventListener('submit', event => { event.preventDefault(); saveCycleAndRecord(); });
-$('save-cycle-records').addEventListener('click', saveCycleAndRecord);
+$('save-cycle-records').addEventListener('click', () => saveCycleAndRecord());
 $('open-cycle').addEventListener('click', () => {
   $('edit-cycle-days').value = state.cycleDays ?? '';
   showError('cycle-error', '');
