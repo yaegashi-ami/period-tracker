@@ -541,3 +541,6 @@ $('later-years').addEventListener('click', () => { lastPickerYear += 3; renderMo
 addStartRow();
 if (state.onboarded) { renderCalendar(); show('calendar-screen'); }
 else show('start-screen');
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+}

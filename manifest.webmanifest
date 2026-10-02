@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "period｜生理の記録",
+  "short_name": "period",
+  "description": "生理の記録と周期の確認に絞ったアプリ",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#191f29",
+  "background_color": "#191f29",
+  "icons": [
+    {
+      "src": "./assets/logo.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/logo@3x.png",
+      "sizes": "600x600",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
