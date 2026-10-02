@@ -1,4 +1,4 @@
-import { dayGap, shiftDay, recordAt, predict, recordedInMonth, overlaps } from "./calendar-model.mjs";
+import { dayGap, shiftDay, recordAt, predict, recordedInMonth, overlaps } from "./calendar-model.mjs?v=20261002-halfyear";
 const STORAGE_KEY = 'period-tracker-prototype-v1';
 const $ = (id) => document.getElementById(id);
 const todayISO = () => {

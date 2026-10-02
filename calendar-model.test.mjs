@@ -11,7 +11,7 @@ test('日付差は閏日と年をまたいでも日数単位', () => {
   assert.equal(dayGap('2024-02-28', '2024-03-01'), 2);
   assert.equal(shiftDay('2024-12-31', 1), '2025-01-01');
 });
-test('直近3周期の中央値と1年の平均、および指定された時期', () => {
+test('直近3周期の中央値と半年の平均、および指定された時期', () => {
   assert.deepEqual(predict({ periods, cycleDays: 28 }), {
     main: '2025-04-28', alternative: '2025-04-27', ovulation: '2025-04-14', pmsFrom: '2025-04-18', pmsTo: '2025-04-25'
   });
@@ -22,7 +22,7 @@ test('開始日1回なら入力周期、未入力なら仮の28日、記録な�
   assert.equal(predict({ periods: [periods[0]], cycleDays: 31 }).main, '2025-02-01');
   assert.equal(predict({ periods: [], cycleDays: 28 }), null);
 });
-test('1年以上前の周期は対抗の平均に含めない', () => {
+test('半年前より古い周期は対抗の平均に含めない', () => {
   const result = predict({ periods: [{start:'2023-01-01'}, {start:'2023-01-11'}, ...periods], cycleDays: 28 });
   assert.equal(result.alternative, '2025-04-27');
 });
@@ -51,8 +51,28 @@ test('2回目から仮の28日も入力周期も混ぜず本人の周期だけ�
     assert.equal(result.alternative, '2025-03-12');
   }
 });
-test('1年以内の周期がない場合も仮の28日に戻さない', () => {
+test('半年以内の周期がない場合も仮の28日に戻さない', () => {
   const result = predict({ periods: [{ start: '2023-01-01' }, { start: '2024-01-02' }], cycleDays: 28 });
   assert.equal(result.main, '2025-01-02');
   assert.equal(result.alternative, result.main);
+});
+
+test('対抗は最新の開始日から6か月前を含み、それより前を除く', () => {
+  const result = predict({ periods: [
+    { start: '2025-04-01' }, { start: '2025-04-02' },
+    { start: '2025-05-02' }, { start: '2025-10-02' }
+  ] });
+  // 4月1日開始の1日周期は除外。4月2日以降の30日・153日周期を平均。
+  assert.equal(result.alternative, shiftDay('2025-10-02', 92));
+  assert.equal(result.main, shiftDay('2025-10-02', 30));
+});
+test('6か月前に同じ日がない場合はその月の末日を含む', () => {
+  for (const [latest, before, cutoff, next, expected] of [
+    ['2025-10-31', '2025-04-29', '2025-04-30', '2025-05-31', 92],
+    ['2024-08-31', '2024-02-28', '2024-02-29', '2024-03-31', 92],
+    ['2025-08-31', '2025-02-27', '2025-02-28', '2025-03-31', 92]
+  ]) {
+    const result = predict({ periods: [before, cutoff, next, latest].map(start => ({ start })) });
+    assert.equal(result.alternative, shiftDay(latest, expected));
+  }
 });

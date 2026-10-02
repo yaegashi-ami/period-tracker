@@ -12,6 +12,13 @@ export const recordAt = (periods, iso) => {
   }
   return null;
 };
+const sixMonthsBefore = (iso) => {
+  const [year, month, day] = iso.split('-').map(Number);
+  const first = new Date(Date.UTC(year, month - 7, 1));
+  const lastDay = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
+  first.setUTCDate(Math.min(day, lastDay));
+  return first.toISOString().slice(0, 10);
+};
 export const predict = (state) => {
   const records = ordered(state.periods);
   if (!records.length) return null;
@@ -20,8 +27,8 @@ export const predict = (state) => {
   const recent = cycles.slice(-3).map(c => c.days).sort((a, b) => a - b);
   const fallback = Number.isInteger(state.cycleDays) && state.cycleDays > 0 ? state.cycleDays : 28;
   const median = recent.length ? (recent[Math.floor((recent.length - 1) / 2)] + recent[Math.floor(recent.length / 2)]) / 2 : fallback;
-  const annual = cycles.filter(c => c.start >= shiftDay(latest, -365));
-  const average = annual.length ? annual.reduce((sum, c) => sum + c.days, 0) / annual.length : median;
+  const halfYear = cycles.filter(c => c.start >= sixMonthsBefore(latest));
+  const average = halfYear.length ? halfYear.reduce((sum, c) => sum + c.days, 0) / halfYear.length : median;
   if (!median && !average) return null;
   const main = median ? shiftDay(latest, Math.round(median)) : null;
   return { main, alternative: average ? shiftDay(latest, Math.round(average)) : null,
