@@ -1659,11 +1659,6 @@ h2,
   color: #85858a;
 }
 
-.day.today .day-mark,
-.day.outside.today .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color) {
-  border: 1px solid #c9bcff;
-}
-
 .day.today .day-mark {
   flex-direction: column;
   gap: 2px;
