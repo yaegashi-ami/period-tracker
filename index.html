@@ -8,7 +8,7 @@
     <link rel="manifest" href="./manifest.webmanifest?v=20261002-standard-icons" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-select-spacing" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-today-lime" />
     <title>period｜生理の記録</title>
     <script>
       (function(d) {
@@ -125,7 +125,7 @@
           <div class="rule-main"><dt>本命</dt><dd>直近3周期の中央値で計算。</dd></div>
           <div class="rule-alternative"><dt>対抗</dt><dd>過去半年の周期の平均で計算。</dd></div>
         </dl>
-        <p class="prediction-rules">単発の長い周期は影響を抑え、続く場合は計算に反映します。</p>
+        <p class="prediction-rules">イレギュラーな周期は影響を抑え、続く場合は計算に反映します。</p>
         <button id="export-records" class="text-button export-button" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13"/><path d="m7 11 5 5 5-5"/><path d="M4 17v4h16v-4"/></svg>
           記録をエクスポート
@@ -147,7 +147,13 @@
       <form id="edit-form" novalidate>
         <label class="edit-field">編集する生理<select id="edit-record-select"></select></label>
         <label class="edit-field">開始日<input id="edit-start" type="date" required /></label>
-        <label class="edit-field">終了日 <span class="optional">（未入力でもOK）</span><input id="edit-end" type="date" /></label>
+        <div class="edit-field edit-end-field">
+          <div class="edit-end-heading">
+            <label for="edit-end">終了日</label>
+            <label class="edit-end-empty"><input id="edit-end-empty" type="checkbox" />未入力にする</label>
+          </div>
+          <input id="edit-end" type="date" />
+        </div>
         <p id="edit-error" class="error-message" role="alert" hidden></p>
       </form>
       <button id="reset-data" class="secondary-button reset-button" type="button">
@@ -178,13 +184,13 @@
       <label><input id="settings-ovulation" type="checkbox" />排卵予定日</label>
     </div>
 
-    <dialog id="month-dialog" class="month-dialog" aria-labelledby="month-picker-title">
+    <dialog id="month-dialog" class="date-dialog month-dialog" aria-labelledby="month-picker-title">
       <div class="dialog-header"><h2 id="month-picker-title">年月を選ぶ</h2><button id="close-month" class="icon-button" type="button" aria-label="閉じる">×</button></div>
       <button id="earlier-years" class="secondary-button" type="button">以前の年を表示</button>
       <div id="month-years"></div>
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-pwa"></script>
+    <script type="module" src="./app.js?v=20261002-short-irregular"></script>
   </body>
 </html>

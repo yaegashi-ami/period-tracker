@@ -111,7 +111,20 @@ test('除外した区間しかないときは28日や入力周期で補わない
   state.cycleDays = 28;
   assert.equal(predict(state), null);
 });
-test('単発の長い周期は4分の1の重みで計算し、履歴の実日数は保つ', () => {
+test('23日未満の周期はイレギュラーとして重みを抑え、短い周期が続けば反映する', () => {
+  const oneShort = fromCycles([28, 22]);
+  assert.deepEqual(cycleIntervals(oneShort).map(c => c.kind), ['recorded', 'short']);
+  assert.deepEqual(weightedCycles(oneShort).map(c => c.weight), [1, 0.25]);
+  assert.equal(cycleIntervals(oneShort)[1].days, 22);
+
+  const repeatedShort = fromCycles([22, 22]);
+  assert.deepEqual(weightedCycles(repeatedShort).map(c => c.weight), [1, 1]);
+
+  const boundary = fromCycles([23]);
+  assert.equal(cycleIntervals(boundary)[0].kind, 'recorded');
+  assert.equal(weightedCycles(boundary)[0].weight, 1);
+});
+test('イレギュラーな周期は4分の1の重みで計算し、履歴の実日数は保つ', () => {
   const state = fromCycles([28, 63]);
   reviewCycle(state, 1, 'long');
   const latest = state.periods.at(-1).start;

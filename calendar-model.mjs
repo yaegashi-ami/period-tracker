@@ -33,7 +33,9 @@ export const cycleIntervals = (state) => {
   const reviews = new Map(activeReviews(state).map(review => [intervalKey(review.from, review.to), review.kind]));
   return records.slice(1).map((record, i) => {
     const from = records[i].start, to = record.start, key = intervalKey(from, to);
-    return { key, from, to, days: dayGap(from, to), kind: reviews.get(key) ?? 'recorded' };
+    const days = dayGap(from, to);
+    const kind = reviews.get(key) ?? (days > 0 && days < 23 ? 'short' : 'recorded');
+    return { key, from, to, days, kind };
   });
 };
 export const gapCandidates = (state) => {
@@ -45,9 +47,13 @@ export const gapCandidates = (state) => {
 export const weightedCycles = (state) => {
   const intervals = cycleIntervals(state);
   const recentLong = intervals.slice(-3).filter(c => c.kind === 'long' && c.days > 0);
-  const restored = new Set(recentLong.length >= 2 ? recentLong.map(c => c.key) : []);
+  const recentShort = intervals.slice(-3).filter(c => c.kind === 'short' && c.days > 0);
+  const restored = new Set([
+    ...(recentLong.length >= 2 ? recentLong.map(c => c.key) : []),
+    ...(recentShort.length >= 2 ? recentShort.map(c => c.key) : [])
+  ]);
   return intervals.filter(c => c.days > 0 && c.kind !== 'unknown').map(c => ({
-    ...c, weight: c.kind === 'long' && !restored.has(c.key) ? 0.25 : 1
+    ...c, weight: ['long', 'short'].includes(c.kind) && !restored.has(c.key) ? 0.25 : 1
   }));
 };
 const weightedMedian = (cycles) => {

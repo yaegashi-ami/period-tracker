@@ -310,11 +310,18 @@ const populateEdit = (id) => {
   const period = state.periods.find(p => p.id === id); if (!period) return;
   editingId = id; $('edit-record-select').value = id;
   $('edit-start').value = period.start; $('edit-end').value = period.end || '';
+  $('edit-end-empty').checked = !period.end;
+  $('edit-end').disabled = !period.end;
   $('edit-start').max = todayISO(); $('edit-end').max = todayISO(); $('edit-end').min = period.start;
   showError('edit-error', '');
 };
 $('edit-record-select').addEventListener('change', () => populateEdit($('edit-record-select').value));
 $('edit-start').addEventListener('change', () => { $('edit-end').min = $('edit-start').value; });
+$('edit-end-empty').addEventListener('change', () => {
+  const isEmpty = $('edit-end-empty').checked;
+  $('edit-end').disabled = isEmpty;
+  if (isEmpty) $('edit-end').value = '';
+});
 const renderEditRecords = (selectedId = null) => {
   const records = sortedPeriods();
   $('edit-record-select').replaceChildren(...records.map(record => {
@@ -338,8 +345,11 @@ const renderCycleHistory = () => {
     item.append(range);
     const status = document.createElement('small');
     if (cycle.kind === 'unknown') status.textContent = '記録不明・予測には使いません';
-    else if (cycle.kind === 'long') status.textContent = weights.get(cycle.key) < 1 ? '実際に長かった周期・影響を抑えて計算' : '長い周期が続いているため計算に反映';
-    else if (candidates.has(cycle.key)) status.textContent = 'まだ確認していない区間';
+    else if (['long', 'short'].includes(cycle.kind)) {
+      status.textContent = weights.get(cycle.key) < 1
+        ? 'イレギュラーな周期・影響を抑えて計算'
+        : `${cycle.kind === 'short' ? '短い' : '長い'}周期が続いているため計算に反映`;
+    } else if (candidates.has(cycle.key)) status.textContent = 'まだ確認していない区間';
     if (status.textContent) item.append(status);
     if (cycle.kind !== 'recorded' || candidates.has(cycle.key)) {
       const review = document.createElement('button');
@@ -380,7 +390,7 @@ const saveCycleAndRecord = () => {
   const raw = $('edit-cycle-days').value.trim();
   const days = raw === '' ? null : Number(raw);
   const period = state.periods.find(p => p.id === editingId);
-  const start = $('edit-start').value, end = $('edit-end').value || null;
+  const start = $('edit-start').value, end = $('edit-end-empty').checked ? null : $('edit-end').value || null;
   let cycleError = '';
   let editError = '';
   if ($('edit-cycle-days').validity.badInput || (days !== null && (!Number.isInteger(days) || days < 1 || days > 365))) cycleError = '周期は1〜365日の数字で入力してください。';

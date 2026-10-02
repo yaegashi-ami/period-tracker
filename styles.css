@@ -28,6 +28,11 @@ select {
   font: inherit;
 }
 
+input,
+select {
+  font-weight: 400;
+}
+
 button {
   cursor: pointer;
 }
@@ -68,7 +73,6 @@ select:focus-visible {
   margin: 0 0 9px;
   color: #7163c7;
   font-size: 11px;
-  font-weight: 700;
   letter-spacing: 0.18em;
 }
 
@@ -122,6 +126,7 @@ h1 {
 h2 {
   margin: 0;
   color: #242281;
+  letter-spacing: 0.1em;
 }
 
 .choice-card {
@@ -148,7 +153,6 @@ h2 {
   padding: 0 7px;
   color: #34328a;
   font-size: 15px;
-  font-weight: 700;
 }
 
 .choice-row {
@@ -230,7 +234,6 @@ h2 {
   gap: 8px;
   color: #6257c5;
   font-size: 12px;
-  font-weight: 700;
   margin: 0 0 16px;
 }
 
@@ -262,7 +265,7 @@ h2 {
 
 .number-field input,
 .date-list input,
-.edit-field input {
+.edit-field input:not([type="checkbox"]) {
   width: 100%;
   height: 48px;
   border: 1px solid #cfcaec;
@@ -274,7 +277,6 @@ h2 {
 
 .number-field input {
   font-size: 25px;
-  font-weight: 700;
 }
 
 .number-field span {
@@ -676,7 +678,7 @@ h2 {
 .edit-field {
   display: block;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 400;
   margin: 0 0 8px;
 }
 
@@ -695,7 +697,7 @@ h2 {
   margin: 16px 0;
 }
 
-.edit-field input {
+.edit-field input:not([type="checkbox"]) {
   display: block;
   margin-top: 7px;
 }
@@ -717,7 +719,6 @@ h2 {
   background: #2922caed;
   color: #fff;
   font-size: 18px;
-  font-weight: 700;
   z-index: 20;
 }
 
@@ -823,7 +824,6 @@ h2 {
 
 .progress-head span {
   color: #817d9e;
-  font-weight: 700;
 }
 
 .progress-steps {
@@ -856,7 +856,6 @@ h2 {
   z-index: 1;
   color: #9994b0;
   font-size: 12px;
-  font-weight: 700;
 }
 
 .progress-icon {
@@ -951,7 +950,6 @@ h2 {
   background: #392bd2;
   color: #fff;
   font-size: 23px;
-  font-weight: 700;
   animation: pop 0.6s ease-out;
 }
 
@@ -1268,7 +1266,6 @@ h2 {
   background: transparent;
   color: #35314e;
   font: inherit;
-  font-weight: 700;
   padding: 10px 0;
 }
 
@@ -1279,7 +1276,6 @@ h2 {
   color: #a33b65;
   padding: 11px 22px;
   font: inherit;
-  font-weight: 700;
   min-height: 44px;
 }
 
@@ -1312,27 +1308,25 @@ h2 {
   background-position: right 16px center;
   background-size: 16px;
   color: #252451;
+  font-weight: 400;
 }
 
 .month-dialog {
   width: min(calc(100% - 24px), 600px);
   max-height: 90dvh;
-  padding: 24px;
-  border: 0;
+  padding: 22px;
+  border: 1px solid var(--calendar-surface-border);
   border-radius: 24px;
-  color: #302779;
-  background: #fff;
+  color: #fff;
+  background: #191f29;
+  box-shadow: 0 16px 48px #0005;
   overflow: auto;
-}
-
-.month-dialog::backdrop {
-  background: #16133f83;
 }
 
 .month-dialog .dialog-header {
   position: sticky;
-  top: -24px;
-  background: white;
+  top: -22px;
+  background: #191f29;
   padding: 16px 0;
   z-index: 1;
 }
@@ -1467,12 +1461,41 @@ h2,
 
 .number-field input,
 .date-list input,
-.edit-field input,
+.edit-field input:not([type="checkbox"]),
 .edit-field select,
 .end-action select {
-  background: #181818;
+  background-color: #181818;
   color: #f2f2f3;
   border-color: #505054;
+}
+
+.edit-end-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.edit-end-empty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #b8bdc8;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.edit-end-empty input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #74abef;
+}
+
+.edit-end-field input:disabled {
+  opacity: 0.55;
 }
 
 .progress-head span,
@@ -1522,18 +1545,8 @@ h2,
   color: #ffa5c8;
 }
 
-.month-dialog {
-  background: #222222;
-  color: #eeeeef;
-  box-shadow: 0 24px 70px #0008;
-}
-
-.month-dialog::backdrop {
-  background: #000000bd;
-}
-
 .month-dialog .dialog-header {
-  background: #222222;
+  background: #191f29;
 }
 
 .year-section h3 {
@@ -1651,6 +1664,11 @@ h2,
 
 .day.outside .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color) {
   color: #85858a;
+}
+
+.day.today .day-mark,
+.day.outside.today .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color) {
+  color: #dcff62;
 }
 
 /* この画面で選んだ演出は、端末の動作設定に関係なく再生する。 */
