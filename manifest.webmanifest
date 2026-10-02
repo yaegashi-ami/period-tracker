@@ -12,13 +12,7 @@
   "background_color": "#191f29",
   "icons": [
     {
-      "src": "./assets/logo.png",
-      "sizes": "400x400",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./assets/logo@3x.png",
+      "src": "./assets/logo@3x.png?v=20261002-icon-v2",
       "sizes": "600x600",
       "type": "image/png",
       "purpose": "any"

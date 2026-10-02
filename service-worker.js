@@ -1,4 +1,4 @@
-const CACHE_NAME = 'period-tracker-shell-v2';
+const CACHE_NAME = 'period-tracker-shell-v3';
 const SHELL_FILES = [
   './',
   './index.html',
