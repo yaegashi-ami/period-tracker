@@ -166,10 +166,12 @@ h2 {
 }
 
 .choice-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
+  display: grid;
+  grid-template-columns: 19px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px 12px;
   padding: 13px 3px;
+  font-weight: 400;
 }
 
 .choice-row+.choice-row {
@@ -185,14 +187,18 @@ h2 {
   flex: 0 0 auto;
 }
 
-.choice-row span {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.choice-row input {
+  margin: 0;
 }
 
-.choice-row strong {
+.choice-row .choice-title {
   font-size: 15px;
+  font-weight: 400;
+}
+
+.choice-row small {
+  grid-column: 1 / -1;
+  font-weight: 400;
 }
 
 .choice-row small,
@@ -1781,8 +1787,6 @@ body.onboarding-active,
 }
 
 .is-onboarding .choice-row {
-  align-items: center;
-  gap: 16px;
   padding: 16px 0;
 }
 
@@ -1798,12 +1802,7 @@ body.onboarding-active,
   border-color: rgb(255 255 255 / 14%);
 }
 
-.is-onboarding .choice-row input {
-  order: 1;
-  margin-left: auto;
-}
-
-.is-onboarding .choice-row strong,
+.is-onboarding .choice-row .choice-title,
 .is-onboarding .field-title,
 .is-onboarding .checkbox-line {
   font-size: 16px;

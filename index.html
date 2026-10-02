@@ -8,7 +8,7 @@
     <link rel="manifest" href="./manifest.webmanifest?v=20261002-standard-icons" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-date-spacing" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-choice-layout" />
     <title>period｜生理の記録</title>
     <script>
       (function(d) {
@@ -61,8 +61,16 @@
           <p>カレンダーに表示する目安を選んでください。後から変更できます。</p>
         </div>
         <div class="choice-card" role="group" aria-label="カレンダーに表示する目安">
-          <label class="choice-row"><input id="show-premenstrual" type="checkbox" checked /><span><strong>生理前の時期</strong><small>気分や体調が変わりやすい時期の目安</small></span></label>
-          <label class="choice-row"><input id="show-ovulation" type="checkbox" checked /><span><strong>排卵予定日</strong><small>周期から計算する予定日の目安</small></span></label>
+          <label class="choice-row">
+            <input id="show-premenstrual" type="checkbox" checked aria-labelledby="premenstrual-label" aria-describedby="premenstrual-hint" />
+            <span id="premenstrual-label" class="choice-title">生理前の時期</span>
+            <small id="premenstrual-hint">気分や体調が変わりやすい時期の目安</small>
+          </label>
+          <label class="choice-row">
+            <input id="show-ovulation" type="checkbox" checked aria-labelledby="ovulation-label" aria-describedby="ovulation-hint" />
+            <span id="ovulation-label" class="choice-title">排卵予定日</span>
+            <small id="ovulation-hint">周期から計算する予定日の目安</small>
+          </label>
         </div>
         <p class="subtle">記録から計算した目安を表示します。</p>
         <button id="welcome-next" class="primary-button" type="button">次へ <span aria-hidden="true">❯</span></button>
