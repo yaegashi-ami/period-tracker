@@ -3,11 +3,12 @@
   --calendar-surface-border: #3a4658;
   --calendar-surface-hover: #303d50;
   --app-background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
+  color-scheme: dark;
   font-family: "heisei-maru-gothic-std", "Hiragino Maru Gothic ProN", sans-serif;
   font-feature-settings: "palt" 1;
-  letter-spacing: 0.015em;
-  color: #252451;
-  background: #f7f6ff;
+  letter-spacing: 0.02em;
+  color: #eeeeef;
+  background: #181822;
   font-synthesis: none;
 }
 
@@ -18,8 +19,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 90% -10%, #e4ddff 0, transparent 34%), #f7f6ff;
+  background: var(--app-background);
 }
 
 button,
@@ -47,8 +47,8 @@ select:focus-visible {
   width: min(100%, 760px);
   min-height: 100vh;
   margin: 0 auto;
-  background: #fff;
-  box-shadow: 0 14px 70px #2922ca0b;
+  background: var(--app-background);
+  box-shadow: none;
 }
 
 .brand-bar {
@@ -57,7 +57,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 13px;
-  border-bottom: 1px solid #eceafd;
+  border-bottom: 1px solid #303030;
 }
 
 .screen {
@@ -114,9 +114,8 @@ select:focus-visible {
 
 h1 {
   margin: 0;
-  color: #242281;
   font-size: clamp(27px, 5vw, 38px);
-  letter-spacing: -0.025em;
+  letter-spacing: 0.1em;
   line-height: 1.35;
 }
 
@@ -139,7 +138,23 @@ h2 {
 }
 
 .choice-card {
+  border-radius: 24px;
+  background: rgb(255 255 255 / 8%);
+  box-shadow: none;
   margin: 0 0 17px;
+}
+
+.form-card {
+  border-radius: 24px;
+  background: rgb(255 255 255 / 8%);
+  box-shadow: none;
+}
+
+.calendar-card {
+  padding: 18px 14px;
+  border-radius: 24px;
+  background: var(--calendar-surface);
+  color: #fff;
 }
 
 .choice-card legend {
@@ -196,8 +211,8 @@ h2 {
   width: 100%;
   min-height: 52px;
   border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .primary-button {
@@ -205,21 +220,21 @@ h2 {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #3127cc;
+  background: #438ce6;
   color: #fff;
-  border: 1px solid #3127cc;
-  box-shadow: 0 8px 19px #3127cc25;
+  border: 1px solid #438ce6;
+  box-shadow: none;
 }
 
 .primary-button:hover {
-  background: #2118b0;
+  background: #5b9ef0;
 }
 
 .secondary-button {
   margin-top: 8px;
   border: 0;
   background: transparent;
-  color: #615cb0;
+  color: #937bff;
 }
 
 .step-label {
@@ -308,8 +323,8 @@ h2 {
 .text-button {
   border: 0;
   background: transparent;
-  color: #4c3bd3;
-  font-weight: 700;
+  color: #937bff;
+  font-weight: 400;
   font-size: 13px;
   padding: 7px;
 }
@@ -351,12 +366,13 @@ h2 {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 23px;
 }
 
 .calendar-intro h1 {
-  font-size: clamp(26px, 5vw, 34px);
+  margin-top: 0;
+  font-size: clamp(24px, 5vw, 32px);
 }
 
 .icon-button {
@@ -374,8 +390,8 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 0 15px;
-  padding-inline: 8px;
+  margin: 0 0 5px;
+  padding-inline: 12px;
 }
 
 .month-nav h2 {
@@ -396,39 +412,36 @@ h2 {
 }
 
 .calendar-grid {
-  gap: 5px;
+  gap: 4px;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
 }
 
 .day {
-  height: clamp(42px, 8vw, 68px);
+  height: auto;
+  min-width: 0;
+  aspect-ratio: 1;
   border: 0;
-  border-radius: 12px;
-  background: #fbfaff;
+  border-radius: 0;
+  background: transparent;
+  padding: 2px;
+  display: grid;
+  place-items: center;
   position: relative;
-  color: #29265e;
+  color: #fff;
   text-align: center;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
+  box-shadow: none;
 }
 
 .day:hover {
-  background: #efecff;
+  background: transparent;
 }
 
 .day.outside {
-  opacity: 0.38;
-}
-
-.day.today:after {
-  content: "";
-  width: 4px;
-  height: 4px;
-  background: #5140db;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%);
+  opacity: 1;
+  color: #fff;
 }
 
 .day.confirmed {
@@ -446,8 +459,7 @@ h2 {
 }
 
 .day.selected {
-  outline: 2px solid #3127cc;
-  outline-offset: 2px;
+  outline: 0;
 }
 
 .legend {
@@ -467,9 +479,10 @@ h2 {
 
 .legend-dot {
   display: inline-block;
-  width: 13px;
-  height: 13px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .legend-dot.confirmed {
@@ -544,7 +557,7 @@ h2 {
   border-radius: 10px;
   padding: 9px 11px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .empty-records {
@@ -563,15 +576,16 @@ h2 {
 
 .date-dialog {
   width: min(calc(100% - 28px), 450px);
-  border: 0;
+  border: 1px solid var(--calendar-surface-border);
   border-radius: 24px;
   padding: 22px;
-  box-shadow: 0 24px 70px #17165d50;
-  color: #28265b;
+  box-shadow: 0 16px 48px #0005;
+  background: #191f29;
+  color: #fff;
 }
 
 .date-dialog::backdrop {
-  background: #16133f83;
+  background: #000000bd;
 }
 
 .dialog-header {
@@ -602,7 +616,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 13px;
 }
 
@@ -725,10 +739,6 @@ h2 {
     padding: 13px;
   }
 
-  .calendar-grid {
-    gap: 3px;
-  }
-
   .day {
     border-radius: 9px;
   }
@@ -754,10 +764,6 @@ h2 {
   height: 96px;
   border-radius: 20px;
   margin: 0 0 24px;
-}
-
-.calendar-intro h1 {
-  margin-top: 0;
 }
 
 .onboarding-progress {
@@ -918,15 +924,6 @@ h2 {
   padding: 4px;
 }
 
-body.start-active,
-.app-shell.is-start {
-  background: var(--app-background);
-}
-
-.app-shell.is-start {
-  box-shadow: none;
-}
-
 .start-screen {
   min-height: 100vh;
   min-height: 100dvh;
@@ -960,8 +957,7 @@ body.start-active,
 .start-screen h1 {
   color: #fff;
   font-size: clamp(23px, 5.3vw, 42px);
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 400;
   text-align: center;
   white-space: nowrap;
 }
@@ -1073,14 +1069,6 @@ body.start-active,
 }
 
 /* Calendar: marks belong to dates, unmarked dates remain transparent. */
-.calendar-intro {
-  align-items: center;
-}
-
-.calendar-intro h1 {
-  font-size: clamp(24px, 5vw, 32px);
-}
-
 .icon-button,
 .remove-date,
 .completion-dismiss {
@@ -1122,52 +1110,16 @@ body.start-active,
   color: #302779;
   font: inherit;
   font-size: 19px;
-  font-weight: 700;
+  font-weight: 400;
   padding: 10px;
   cursor: pointer;
 }
 
-.month-nav {
-  margin-bottom: 5px;
-}
-
-.calendar-card {
-  padding: 18px 14px;
-}
-
 .calendar-card .legend {
-  margin: 12px 4px 22px;
+  margin: 12px 8px 22px;
   padding-inline: 8px;
   gap: 9px 14px;
   line-height: 1.5;
-}
-
-.legend-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.calendar-grid {
-  gap: 5px 0;
-}
-
-.day {
-  height: auto;
-  min-width: 0;
-  aspect-ratio: 1;
-  border: 0;
-  border-radius: 0;
-  background: transparent !important;
-  padding: 3px;
-  display: grid;
-  place-items: center;
-  color: #37334e;
-  font-size: 16px;
-  font-weight: 700;
-  box-shadow: none !important;
-  position: relative;
 }
 
 .day-mark {
@@ -1179,19 +1131,7 @@ body.start-active,
   justify-content: center;
   position: relative;
   line-height: 1;
-}
-
-.day.today:after {
-  display: none;
-}
-
-.day.today .day-mark:after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border: 1.5px solid #382ac9;
-  border-radius: 50%;
-  pointer-events: none;
+  transform: translateY(1px);
 }
 
 .day.selected {
@@ -1202,60 +1142,63 @@ body.start-active,
   content: "";
   position: absolute;
   inset: -5px;
-  border: 1.5px solid #7166af;
+  border: 1.5px solid #a3c8f8;
   border-radius: 50%;
   pointer-events: none;
 }
 
 .day:focus-visible {
-  outline: 2px solid #7166af;
+  outline: 2px solid #80b6fa;
   outline-offset: -2px;
   border-radius: 50%;
 }
 
 .day.outside {
   opacity: 1;
-  color: #aaa5ba;
+  color: #939399;
 }
 
 .period-color {
-  background: #ec7da5;
-  color: #492035;
+  background: #ed1769;
+  color: #fff;
 }
 
-.forecast-main,
-.forecast-alternative {
-  background-color: #7970e9;
+.forecast-main {
+  background-color: #6d4ed4;
   color: #fff;
 }
 
 .forecast-alternative {
-  background-image: repeating-linear-gradient(135deg,
-      transparent 0,
-      transparent 4px,
-      #ffffff8c 4px,
-      #ffffff8c 6px);
+  background-color: #af5be0;
+  background-image: none;
+  color: #fff;
 }
 
 .forecast-both {
-  background-image: linear-gradient(90deg, transparent 50%, #b65be0 50%);
+  background-image: linear-gradient(90deg, #6d4ed4 50%, #af5be0 50%);
   outline: none;
+  color: #fff;
+}
+
+.ovulation-color,
+.pms-color {
+  background: transparent;
+  border: 2px solid;
+  color: #fff;
 }
 
 .ovulation-color {
-  background: #d3b8f4;
-  color: #45266b;
+  border-color: #389cff;
 }
 
 .pms-color {
-  background: #bce4de;
-  color: #215b53;
+  border-color: #18b7ad;
 }
 
 .calendar-edit-bar {
   margin-top: 22px;
   padding: 18px 2px 0;
-  border-top: 1px solid #e9e6f4;
+  border-top: 1px solid var(--calendar-surface-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1361,7 +1304,7 @@ body.start-active,
   color: #3d3755;
   font: inherit;
   font-size: 21px;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .month-option.has-record {
@@ -1412,11 +1355,6 @@ body.start-active,
 
   .day {
     font-size: 15px;
-    padding: 5px;
-  }
-
-  .calendar-grid {
-    row-gap: 6px;
   }
 
   .calendar-edit-bar {
@@ -1430,26 +1368,6 @@ body.start-active,
   .month-option {
     font-size: 19px;
   }
-}
-
-/* Dark appearance */
-:root {
-  color-scheme: dark;
-  color: #eeeeef;
-  background: #181822;
-}
-
-body {
-  background: #181822;
-}
-
-.app-shell {
-  background: #181818;
-  box-shadow: none;
-}
-
-.brand-bar {
-  border-color: #303030;
 }
 
 .brand-caption,
@@ -1472,19 +1390,10 @@ h2,
 .month-title,
 .progress-head,
 .selected-date-panel strong {
-  color: #f0f0f2;
+  color: #c8c8e0;
 }
 
-.choice-card,
-.form-card,
-.calendar-card {
-  background: rgb(255 255 255 / 8%);
-  box-shadow: none;
-  border-radius: 24px;
-}
-
-.choice-row+.choice-row,
-.calendar-edit-bar {
+.choice-row+.choice-row {
   border-color: #383838;
 }
 
@@ -1501,22 +1410,6 @@ h2,
   background: #181818;
   color: #f2f2f3;
   border-color: #505054;
-}
-
-.primary-button {
-  background: #438ce6;
-  border-color: #438ce6;
-  color: #ffffff;
-  box-shadow: none;
-}
-
-.primary-button:hover {
-  background: #5b9ef0;
-}
-
-.secondary-button,
-.text-button {
-  color: #80b6fa;
 }
 
 .progress-head span,
@@ -1557,43 +1450,6 @@ h2,
   color: #b8b8bd;
 }
 
-.day {
-  color: #eeeeef;
-}
-
-.day.outside {
-  color: #939399;
-}
-
-.day.today .day-mark:after {
-  border-color: #eeeeef;
-}
-
-.day.selected .day-mark:before {
-  border-color: #a3c8f8;
-}
-
-.period-color {
-  color: #492035;
-}
-
-.forecast-main,
-.forecast-alternative {
-  color: #fff;
-}
-
-.forecast-both {
-  outline-color: #d2e4fa;
-}
-
-.ovulation-color {
-  color: #45266b;
-}
-
-.pms-color {
-  color: #215b53;
-}
-
 .edit-period {
   color: #eeeeef;
 }
@@ -1603,14 +1459,12 @@ h2,
   color: #ffa5c8;
 }
 
-.date-dialog,
 .month-dialog {
   background: #222222;
   color: #eeeeef;
   box-shadow: 0 24px 70px #0008;
 }
 
-.date-dialog::backdrop,
 .month-dialog::backdrop {
   background: #000000bd;
 }
@@ -1683,11 +1537,11 @@ h2,
   position: fixed;
   inset: auto;
   margin: 0;
-  padding: 8px;
-  background: #2c2c2e;
-  color: #eeeeef;
-  border: 1px solid #48484b;
-  border-radius: 14px;
+  padding: 12px;
+  background: var(--calendar-surface);
+  color: #fff;
+  border: 1px solid var(--calendar-surface-border);
+  border-radius: 24px;
   box-shadow: 0 8px 24px #0005;
   font-size: 14px;
   max-width: calc(100vw - 24px);
@@ -1704,11 +1558,11 @@ h2,
   min-height: 44px;
   padding: 8px 10px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .visibility-popover label:hover {
-  background: #39393d;
+  background: var(--calendar-surface-hover);
 }
 
 .visibility-popover input {
@@ -1719,81 +1573,21 @@ h2,
   flex-shrink: 0;
 }
 
-.day.today .day-mark:after {
-  display: none;
-}
-
-.calendar-grid {
-  touch-action: pan-y pinch-zoom;
-  user-select: none;
-}
-
-/* Vivid date markers with consistent white numerals. */
-.day,
-.day.outside,
-.day-mark {
-  color: #fff;
-}
-
-.period-color {
-  background-color: #ed1769;
-  color: #fff;
-}
-
-.forecast-main,
-.forecast-alternative {
-  background-color: #6542f5;
-  color: #fff;
-}
-
-.forecast-alternative {
-  background-image: repeating-linear-gradient(135deg,
-      transparent 0,
-      transparent 4px,
-      #ffffff30 4px,
-      #ffffff30 6px);
-}
-
-.ovulation-color {
-  background-color: #168bef;
-  color: #fff;
-}
-
-.pms-color {
-  background-color: #00aaa4;
-  color: #fff;
-}
-
 .calendar-edit-bar .edit-period {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   padding: 0;
 }
 
 .calendar-edit-bar .date-action {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
   min-height: 34px;
   padding: 7px 15px;
 }
 
 .day.outside .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color) {
   color: #85858a;
-}
-
-.forecast-alternative {
-  background-color: #b65be0;
-  background-image: none;
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline-color: #80b6fa;
-}
-
-.day:focus-visible {
-  outline-color: #80b6fa;
 }
 
 /* この画面で選んだ演出は、端末の動作設定に関係なく再生する。 */
@@ -1813,24 +1607,6 @@ select:focus-visible {
   .start-screen .start-features li:nth-child(3) {
     animation-delay: 0.6s !important;
   }
-}
-
-/* 円を1px下げ、数字は元の位置に保つ。 */
-.day-mark {
-  transform: translateY(1px);
-}
-
-.day-number {
-  transform: translateY(-1px);
-}
-
-/* すべての画面で共通のグラデーションを使う。 */
-body {
-  background: var(--app-background);
-}
-
-.app-shell:not(.is-start) {
-  background: var(--app-background);
 }
 
 /* スタート画面をブラウザのバーが見えている高さに収める。 */
@@ -1873,6 +1649,7 @@ body.start-active,
   font-size: 18px;
   margin-bottom: 24px;
   flex-shrink: 0;
+  font-weight: 800;
 }
 
 /* 初期設定はスタート画面と同じトーンでつなぐ。 */
@@ -2128,11 +1905,12 @@ body.onboarding-active,
   min-height: 56px;
   margin-top: 16px;
   padding: 16px 20px;
-  border: 1px solid #363636;
+  border: 1px solid var(--calendar-surface-border);
   border-radius: 12px;
-  background: #222222;
+  background: var(--calendar-surface);
   color: #fff;
   font-size: 15px;
+  font-weight: 400;
 }
 
 .cycle-button svg {
@@ -2147,7 +1925,7 @@ body.onboarding-active,
 }
 
 .cycle-button:hover {
-  background: #303030;
+  background: var(--calendar-surface-hover);
 }
 
 .cycle-history {
@@ -2216,37 +1994,10 @@ body.onboarding-active,
   stroke-linejoin: round;
 }
 
-/* 周期の目安は塗りつぶさず、色の付いた枠で示す。 */
-.ovulation-color,
-.pms-color {
-  background: transparent;
-  border: 2px solid;
-  color: #fff;
-}
-
-.ovulation-color {
-  border-color: #389cff;
-}
-
-.pms-color {
-  border-color: #18b7ad;
-}
-
-.calendar-card,
-.cycle-button,
-#settings-button,
-.visibility-popover {
+#settings-button {
   background: var(--calendar-surface);
   border-color: var(--calendar-surface-border);
   color: #fff;
-}
-
-.date-dialog {
-  border: 1px solid var(--calendar-surface-border);
-  border-radius: 24px;
-  background: #191f29;
-  color: #fff;
-  box-shadow: 0 16px 48px #0005;
 }
 
 .date-dialog .primary-button {
@@ -2260,17 +2011,6 @@ body.onboarding-active,
 
 .date-dialog .primary-button:hover {
   background: #f1efff;
-}
-
-.primary-button,
-.secondary-button,
-.text-button,
-.start-button,
-.cycle-button,
-.date-action,
-.month-title,
-.month-option {
-  font-weight: 400;
 }
 
 #cycle-dialog #close-cycle {
@@ -2294,24 +2034,8 @@ body.onboarding-active,
   stroke-linejoin: round;
 }
 
-.cycle-button:hover,
-#settings-button:hover,
-.visibility-popover label:hover {
+#settings-button:hover {
   background: var(--calendar-surface-hover);
-}
-
-.visibility-popover {
-  padding: 12px;
-  border-radius: 24px;
-  box-shadow: 0 8px 24px #0003;
-}
-
-.visibility-popover label {
-  border-radius: 12px;
-}
-
-.calendar-edit-bar {
-  border-color: var(--calendar-surface-border);
 }
 
 .prediction-rules {
@@ -2346,7 +2070,7 @@ body.onboarding-active,
 }
 
 .prediction-rules .rule-alternative dt::before {
-  background: #b65be0;
+  background: #AF5BE0;
 }
 
 .prediction-rules dd {
