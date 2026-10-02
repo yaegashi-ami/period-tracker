@@ -13,6 +13,9 @@
   font-display: swap;
 }
 :root {
+  --calendar-surface: #252e3d;
+  --calendar-surface-border: #3a4658;
+  --calendar-surface-hover: #303d50;
   --app-background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
   font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
   color: #252451;
@@ -1888,4 +1891,60 @@ body.onboarding-active,
 #cycle-dialog .reset-button {
   color: #e3a6b3;
   font-size: 14px;
+}
+
+/* 周期の目安は塗りつぶさず、色の付いた枠で示す。 */
+.ovulation-color,
+.pms-color {
+  background: transparent;
+  border: 2px solid;
+  color: #fff;
+}
+.ovulation-color {
+  border-color: #389cff;
+}
+.pms-color {
+  border-color: #18b7ad;
+}
+.calendar-card,
+.cycle-button,
+#settings-button,
+.visibility-popover {
+  background: var(--calendar-surface);
+  border-color: var(--calendar-surface-border);
+}
+.cycle-button:hover,
+#settings-button:hover,
+.visibility-popover label:hover {
+  background: var(--calendar-surface-hover);
+}
+.visibility-popover {
+  padding: 12px;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px #0003;
+}
+.visibility-popover label {
+  border-radius: 12px;
+}
+.calendar-edit-bar {
+  border-color: var(--calendar-surface-border);
+}
+.prediction-rules {
+  margin: -4px 4px 0;
+  color: #b8bdc8;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.prediction-rules div {
+  display: flex;
+  gap: 10px;
+}
+.prediction-rules dt {
+  flex-shrink: 0;
+}
+.prediction-rules dd {
+  margin: 0;
+}
+#setup-title:focus {
+  outline: none;
 }

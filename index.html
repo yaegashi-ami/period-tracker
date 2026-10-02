@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#2922ca" />
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" href="./assets/logo.png" />
-    <link rel="stylesheet" href="./styles.css?v=20261001-reset" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-display" />
     <title>period｜生理の記録</title>
   </head>
   <body>
@@ -47,7 +47,7 @@
 
       <section id="setup-screen" class="screen" aria-labelledby="setup-title" hidden>
         <div class="setup-heading">
-          <h1 id="setup-title">周期と開始日</h1>
+          <h1 id="setup-title" tabindex="-1">周期と開始日</h1>
           <p>周期日数もしくは最近の生理開始日を追加してください。後から変更できます。</p>
         </div>
         <form id="setup-form" novalidate>
@@ -93,6 +93,10 @@
         </div>
         <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">周期を確認・編集する <span aria-hidden="true">❯</span></button>
         <p id="prediction-note" class="prediction-note"></p>
+        <dl class="prediction-rules">
+          <div><dt>本命</dt><dd>直近3周期の中央値で計算。</dd></div>
+          <div><dt>対抗</dt><dd>過去1年の周期の平均で計算。</dd></div>
+        </dl>
       </section>
     </main>
 
@@ -135,6 +139,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261001-reset"></script>
+    <script type="module" src="./app.js?v=20261002-display"></script>
   </body>
 </html>

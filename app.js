@@ -70,7 +70,10 @@ const addStartRow = (value = '') => {
 
 $('start-button').addEventListener('click', () => show('welcome-screen'));
 $('welcome-back').addEventListener('click', () => show('start-screen'));
-$('welcome-next').addEventListener('click', () => { show('setup-screen'); $('cycle-days').focus(); });
+$('welcome-next').addEventListener('click', () => {
+  show('setup-screen');
+  $('setup-title').focus({ preventScroll: true });
+});
 $('setup-back').addEventListener('click', () => show('welcome-screen'));
 $('add-start').addEventListener('click', () => { addStartRow(); $('start-date-list').lastElementChild.querySelector('input').focus(); });
 $('irregular').addEventListener('change', () => { $('cycle-days').required = !$('irregular').checked; });
