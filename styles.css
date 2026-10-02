@@ -33,6 +33,16 @@ select {
   font-weight: 400;
 }
 
+input[type="date"] {
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: normal;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  padding-inline: 0.2em;
+}
+
 button {
   cursor: pointer;
 }
