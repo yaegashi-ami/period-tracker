@@ -1248,7 +1248,7 @@ h2 {
 }
 
 .pms-color {
-  border-color: #18b7ad;
+  border: 2px solid #1e9e8d;
 }
 
 .calendar-edit-bar {
@@ -1338,7 +1338,6 @@ h2 {
 
 .year-section h3 {
   font-size: 38px;
-  color: #392bcf;
   font-weight: 400;
   margin: 0 0 20px;
 }
@@ -1369,13 +1368,8 @@ h2 {
   border-color: #6b5ed9;
 }
 
-.month-option.current-month {
-  background: #3025cd;
-  color: #fff;
-}
-
 .month-option.current-month.has-record {
-  outline: 1px solid #3025cd;
+  outline: #664fca;
   outline-offset: 3px;
 }
 
@@ -1472,7 +1466,6 @@ h2,
 .edit-end-heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
 
@@ -1491,7 +1484,7 @@ h2,
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: #74abef;
+  accent-color: #937bff;
 }
 
 .edit-end-field input:disabled {
@@ -1550,7 +1543,7 @@ h2,
 }
 
 .year-section h3 {
-  color: #81b7fa;
+  color: #937bff;
 }
 
 .month-option {
@@ -1558,16 +1551,16 @@ h2,
 }
 
 .month-option.has-record {
-  border-color: #74abef;
+  border-color: #937bff;
 }
 
 .month-option.current-month {
-  background: #438ce6;
+  background: #937bff;
   color: #fff;
 }
 
 .month-option.current-month.has-record {
-  outline-color: #74abef;
+  outline-color: #937bff;
 }
 
 .month-option:hover {
@@ -1614,11 +1607,11 @@ h2,
   inset: auto;
   margin: 0;
   padding: 12px;
-  background: var(--calendar-surface);
+  background: #191f29;
   color: #fff;
   border: 1px solid var(--calendar-surface-border);
   border-radius: 24px;
-  box-shadow: 0 8px 24px #0005;
+  box-shadow: 0 0px 20px #0005;
   font-size: 14px;
   max-width: calc(100vw - 24px);
 }
@@ -1668,7 +1661,22 @@ h2,
 
 .day.today .day-mark,
 .day.outside.today .day-mark:not(.period-color):not(.forecast-main):not(.forecast-alternative):not(.ovulation-color):not(.pms-color) {
-  color: #dcff62;
+  border: 1px solid #c9bcff;
+}
+
+.day.today .day-mark {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day.today .day-mark::after {
+  content: "";
+  order: -1;
+  width: 4px;
+  height: 4px;
+  flex: 0 0 4px;
+  border-radius: 50%;
+  background: #c9bcff;
 }
 
 /* この画面で選んだ演出は、端末の動作設定に関係なく再生する。 */
