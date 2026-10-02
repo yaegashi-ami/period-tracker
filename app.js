@@ -217,10 +217,6 @@ $('open-cycle').addEventListener('click', () => {
   $('edit-cycle-days').value = state.cycleDays ?? '';
   showError('cycle-error', '');
   const records = sortedPeriods().reverse();
-  const prediction = predict(state);
-  $('cycle-summary').textContent = prediction
-    ? `本命：${dayGap(records.at(-1).start, prediction.main)}日周期 ／ 対抗：${dayGap(records.at(-1).start, prediction.alternative)}日周期`
-    : '予測に使える周期がまだありません。';
   $('cycle-history').replaceChildren();
   const candidates = new Set(gapCandidates(state).map(c => c.key));
   const weights = new Map(weightedCycles(state).map(c => [c.key, c.weight]));

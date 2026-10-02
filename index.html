@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#2922ca" />
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" href="./assets/logo.png" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-required-label" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-type" />
     <title>period｜生理の記録</title>
   </head>
   <body>
@@ -52,9 +52,10 @@
         </div>
         <form id="setup-form" novalidate>
           <div class="form-card">
-            <div class="section-heading"><span class="field-title">最近の生理開始日<span class="required-badge">（必須）</span></span><button id="add-start" type="button" class="text-button">＋ 日付を追加</button></div>
+            <div class="section-heading"><span class="field-title">最近の生理開始日<span class="required-badge">（必須）</span></span></div>
             <p class="field-hint">新しい記録から入力してください。終了日はカレンダーから設定できます。</p>
             <div id="start-date-list" class="date-list"></div>
+            <button id="add-start" type="button" class="text-button">＋ 日付を追加</button>
           </div>
           <div class="form-card">
             <label for="cycle-days" class="field-title">周期の日数（任意）</label>
@@ -103,8 +104,7 @@
 
     <dialog id="cycle-dialog" class="date-dialog" aria-labelledby="cycle-title">
       <form id="cycle-form" novalidate>
-        <div class="dialog-header"><h2 id="cycle-title">周期を確認・編集</h2><button id="close-cycle" class="icon-button" type="button" aria-label="閉じる">×</button></div>
-        <p id="cycle-summary" class="dialog-help"></p>
+        <div class="dialog-header"><h2 id="cycle-title">周期を確認・編集</h2></div>
         <ul id="cycle-history" class="cycle-history"></ul>
         <label for="edit-cycle-days" class="edit-field">周期の日数（任意）</label>
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
@@ -112,6 +112,7 @@
         <button id="edit-cycle-records" class="text-button" type="button">開始日・終了日を修正</button>
         <p id="cycle-error" class="error-message" role="alert" hidden></p>
         <button class="primary-button" type="submit">保存する</button>
+        <button id="close-cycle" class="secondary-button" type="button">閉じる</button>
         <button id="reset-data" class="secondary-button reset-button" type="button">記録と設定をリセット</button>
       </form>
     </dialog>
@@ -159,6 +160,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-cycle-optional"></script>
+    <script type="module" src="./app.js?v=20261002-type"></script>
   </body>
 </html>
