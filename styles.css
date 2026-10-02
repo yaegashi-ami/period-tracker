@@ -306,6 +306,9 @@ h2 {
 }
 
 .text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 0;
   background: transparent;
   color: #937bff;
@@ -315,15 +318,9 @@ h2 {
 }
 
 .export-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  width: auto;
   min-height: 44px;
   margin: 18px 4px 0;
   padding: 8px 0;
-  color: #c8c8e0;
-  text-align: left;
 }
 
 .export-button svg,
@@ -2020,16 +2017,6 @@ body.onboarding-active,
 
 .date-dialog .primary-button:hover {
   background: #f1efff;
-}
-
-#cycle-dialog #close-cycle {
-  color: #fff;
-}
-
-#cycle-dialog .cycle-record-edit {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 }
 
 #cycle-dialog .cycle-record-edit svg {

@@ -372,6 +372,7 @@ $('open-cycle').addEventListener('click', () => {
     : '入力した日数は予測の参考です。空欄は「不明」として保存し、開始日が1件だけなら28日周期を参考にします。';
   $('edit-cycle-records').hidden = records.length === 0;
   $('cycle-dialog').showModal();
+  $('cycle-title').focus({ preventScroll: true });
 });
 $('reset-data').addEventListener('click', () => {
   if (!window.confirm('このブラウザに保存した生理の記録と設定をすべて削除し、最初からやり直します。削除してもよいですか？')) return;

@@ -7,7 +7,7 @@
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-backup" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-cycle-focus" />
     <title>period｜生理の記録</title>
     <script>
       (function(d) {
@@ -134,7 +134,7 @@
 
     <dialog id="cycle-dialog" class="date-dialog" aria-labelledby="cycle-title">
       <form id="cycle-form" novalidate>
-        <div class="dialog-header"><h2 id="cycle-title">周期を確認・編集</h2></div>
+        <div class="dialog-header"><h2 id="cycle-title" tabindex="-1" autofocus>周期を確認・編集</h2></div>
         <ul id="cycle-history" class="cycle-history"></ul>
         <label for="edit-cycle-days" class="edit-field">周期の日数（任意）</label>
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
@@ -196,6 +196,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-backup"></script>
+    <script type="module" src="./app.js?v=20261002-cycle-focus"></script>
   </body>
 </html>
