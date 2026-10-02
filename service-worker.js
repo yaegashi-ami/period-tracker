@@ -1,4 +1,4 @@
-const CACHE_NAME = 'period-tracker-shell-v3';
+const CACHE_NAME = 'period-tracker-shell-v4';
 const SHELL_FILES = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const SHELL_FILES = [
   './manifest.webmanifest',
   './assets/logo.png',
   './assets/logo@3x.png',
+  './assets/app-icon-192.png',
+  './assets/app-icon-512.png',
 ];
 
 self.addEventListener('install', event => {
