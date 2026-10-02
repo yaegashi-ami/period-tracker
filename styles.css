@@ -1,25 +1,9 @@
-@font-face {
-  font-family: "Zen Maru Gothic";
-  src: url("./assets/fonts/ZenMaruGothic-Regular.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Zen Maru Gothic";
-  src: url("./assets/fonts/ZenMaruGothic-Bold.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-}
-
 :root {
   --calendar-surface: #252e3d;
   --calendar-surface-border: #3a4658;
   --calendar-surface-hover: #303d50;
   --app-background: linear-gradient(169deg, #181822 1.16%, #1d1b52 100%);
-  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", sans-serif;
+  font-family: "heisei-maru-gothic-std", "Hiragino Maru Gothic ProN", sans-serif;
   font-feature-settings: "palt" 1;
   letter-spacing: 0.015em;
   color: #252451;
@@ -2136,7 +2120,8 @@ body.onboarding-active,
 .cycle-button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 8px;
   width: 100%;
   min-height: 56px;
   margin-top: 16px;
@@ -2146,6 +2131,17 @@ body.onboarding-active,
   background: #222222;
   color: #fff;
   font-size: 15px;
+}
+
+.cycle-button svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .cycle-button:hover {
@@ -2262,6 +2258,38 @@ body.onboarding-active,
 
 .date-dialog .primary-button:hover {
   background: #f1efff;
+}
+
+.primary-button,
+.secondary-button,
+.text-button,
+.start-button,
+.cycle-button,
+.date-action,
+.month-title,
+.month-option {
+  font-weight: 400;
+}
+
+#cycle-dialog #close-cycle {
+  color: #fff;
+}
+
+#cycle-dialog .cycle-record-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#cycle-dialog .cycle-record-edit svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .cycle-button:hover,

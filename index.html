@@ -7,8 +7,23 @@
     <meta name="description" content="生理の記録と周期の確認に絞ったアプリ" />
     <link rel="icon" type="image/png" sizes="400x400" href="./assets/logo.png?v=20261002-logo" />
     <link rel="apple-touch-icon" href="./assets/logo@3x.png?v=20261002-logo" />
-    <link rel="stylesheet" href="./styles.css?v=20261002-dialog-save" />
+    <link rel="stylesheet" href="./styles.css?v=20261002-heisei-maru-ui" />
     <title>period｜生理の記録</title>
+    <script>
+      (function(d) {
+        var config = {
+          kitId: 'wew6hcz',
+          scriptTimeout: 3000,
+          async: true
+        },
+        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
+        h.className+=" wf-loading";
+        tk.src='https://use.typekit.net/'+config.kitId+'.js';
+        tk.async=true;
+        tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};
+        s.parentNode.insertBefore(tk,s);
+      })(document);
+    </script>
   </head>
   <body>
     <main id="app-shell" class="app-shell">
@@ -93,7 +108,10 @@
           <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
         <button id="gap-notice" class="gap-notice" type="button" aria-haspopup="dialog" hidden><span>記録が空いている期間があります</span><span aria-hidden="true">❯</span></button>
-        <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">周期を確認・編集する <span aria-hidden="true">❯</span></button>
+        <button id="open-cycle" class="cycle-button" type="button" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
+          周期を確認・編集する
+        </button>
         <p id="prediction-note" class="prediction-note"></p>
         <dl class="prediction-rules">
           <div class="rule-main"><dt>本命</dt><dd>直近3周期の中央値で計算。</dd></div>
@@ -110,7 +128,10 @@
         <label for="edit-cycle-days" class="edit-field">周期の日数（任意）</label>
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
         <p id="cycle-help" class="dialog-help"></p>
-        <button id="edit-cycle-records" class="text-button" type="button">開始日・終了日を修正</button>
+        <button id="edit-cycle-records" class="text-button cycle-record-edit" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
+          開始日・終了日を修正
+        </button>
         <p id="cycle-error" class="error-message" role="alert" hidden></p>
         <button class="primary-button" type="submit">保存する</button>
         <button id="close-cycle" class="secondary-button" type="button">閉じる</button>
