@@ -350,20 +350,9 @@ const renderCycleHistory = () => {
     $('cycle-history').append(item);
   });
 };
-$('edit-form').addEventListener('submit', event => {
-  event.preventDefault();
-  const period = state.periods.find(p => p.id === editingId); if (!period) return;
-  const start = $('edit-start').value, end = $('edit-end').value || null;
-  let error = '';
-  if (!validISO(start) || start > todayISO()) error = '開始日は今日以前の日付にしてください。';
-  else if (end && (!validISO(end) || end < start || end > todayISO())) error = '終了日は開始日から今日までの日付にしてください。';
-  else if (overlaps(state.periods, editingId, start, end)) error = 'ほかの生理の記録と日付が重なっています。';
-  showError('edit-error', error); if (error) return;
-  const previous = structuredClone(state); period.start = start; period.end = end;
-  if (!save()) { state = previous; return; }
-  selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`);
-  renderCalendar(); renderCycleHistory(); renderEditRecords(period.id);
-});
+$('cycle-form').addEventListener('submit', event => { event.preventDefault(); saveCycleAndRecord(); });
+$('edit-form').addEventListener('submit', event => { event.preventDefault(); saveCycleAndRecord(); });
+$('save-cycle-records').addEventListener('click', saveCycleAndRecord);
 $('open-cycle').addEventListener('click', () => {
   $('edit-cycle-days').value = state.cycleDays ?? '';
   showError('cycle-error', '');
@@ -387,21 +376,30 @@ $('reset-data').addEventListener('click', () => {
   window.location.reload();
 });
 $('close-cycle').addEventListener('click', () => $('cycle-dialog').close());
-$('cycle-form').addEventListener('submit', event => {
-  event.preventDefault();
+const saveCycleAndRecord = () => {
   const raw = $('edit-cycle-days').value.trim();
   const days = raw === '' ? null : Number(raw);
-  if ($('edit-cycle-days').validity.badInput || (days !== null && (!Number.isInteger(days) || days < 1 || days > 365))) {
-    showError('cycle-error', '周期は1〜365日の数字で入力してください。');
-    return;
-  }
+  const period = state.periods.find(p => p.id === editingId);
+  const start = $('edit-start').value, end = $('edit-end').value || null;
+  let cycleError = '';
+  let editError = '';
+  if ($('edit-cycle-days').validity.badInput || (days !== null && (!Number.isInteger(days) || days < 1 || days > 365))) cycleError = '周期は1〜365日の数字で入力してください。';
+  if (period && !validISO(start)) editError = '開始日を入力してください。';
+  else if (period && start > todayISO()) editError = '開始日は今日以前の日付にしてください。';
+  else if (period && end && (!validISO(end) || end < start || end > todayISO())) editError = '終了日は開始日から今日までの日付にしてください。';
+  else if (period && overlaps(state.periods, editingId, start, end)) editError = 'ほかの生理の記録と日付が重なっています。';
+  showError('cycle-error', cycleError);
+  showError('edit-error', editError);
+  if (cycleError || editError) return;
   const previous = structuredClone(state);
   state.cycleUnknown = days === null;
   state.cycleDays = state.cycleUnknown ? null : days;
+  if (period) { period.start = start; period.end = end; }
   if (!save()) { state = previous; return; }
+  if (period) { selectedDate = start; displayedMonth = new Date(`${start}T12:00:00`); }
   $('cycle-dialog').close();
   renderCalendar();
-});
+};
 let activeGapKey = null;
 let automaticGapShown = false;
 let gapPromptTimer;

@@ -140,7 +140,6 @@
         <div class="number-field cycle-number"><input id="edit-cycle-days" type="number" inputmode="numeric" min="1" max="365" placeholder="28" /><span>日</span></div>
         <p id="cycle-help" class="dialog-help"></p>
         <p id="cycle-error" class="error-message" role="alert" hidden></p>
-        <button class="primary-button" type="submit">保存する</button>
       </form>
       <hr class="dialog-divider" />
       <h3 class="dialog-section-title">記録を修正</h3>
@@ -149,12 +148,12 @@
         <label class="edit-field">開始日<input id="edit-start" type="date" required /></label>
         <label class="edit-field">終了日 <span class="optional">（未入力でもOK）</span><input id="edit-end" type="date" /></label>
         <p id="edit-error" class="error-message" role="alert" hidden></p>
-        <button id="save-edit" class="primary-button" type="submit">保存する</button>
       </form>
       <button id="reset-data" class="secondary-button reset-button" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></svg>
         記録と設定をリセット
       </button>
+      <button id="save-cycle-records" class="primary-button" type="button">保存する</button>
     </dialog>
 
     <div id="gap-popover" class="gap-popover" popover="auto" role="dialog" aria-labelledby="gap-title" aria-describedby="gap-range">
@@ -185,6 +184,6 @@
       <button id="later-years" class="secondary-button" type="button">以降の年を表示</button>
     </dialog>
     <p id="app-notice" class="app-notice" role="alert" hidden></p>
-    <script type="module" src="./app.js?v=20261002-cycle-edit"></script>
+    <script type="module" src="./app.js?v=20261002-cycle-save"></script>
   </body>
 </html>
