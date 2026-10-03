@@ -1289,8 +1289,8 @@ font-size: clamp(15px, 4vw, 18px);
 .date-action {
   border: 0;
   border-radius: 30px;
-  background: #fbe8ef;
-  color: #a33b65;
+  background: #ed1769;
+  color: white;
   padding: 11px 22px;
   font: inherit;
   min-height: 44px;
@@ -1551,8 +1551,8 @@ h2,
 }
 
 .date-action {
-  background: #4d293c;
-  color: #ffa5c8;
+  background: #ed1769;
+  color: white;
 }
 
 .month-dialog .dialog-header {
@@ -1655,7 +1655,7 @@ h2,
   margin: 0;
   width: 18px;
   height: 18px;
-  accent-color: #74abef;
+  accent-color: #937bff;
   flex-shrink: 0;
 }
 
@@ -2262,4 +2262,93 @@ p.prediction-rules {
 
 #gap-title:focus {
   outline: none;
+}
+
+.calendar-notices {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 18px 20px;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.calendar-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  color: #b8b8bd;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.notice-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+  margin-top: 0.35em;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+.notice-dot.period-color {
+  background: #ed1769;
+}
+
+.notice-dot.forecast-main {
+  background: #6d4ed4;
+}
+
+.notice-dot.forecast-alternative {
+  background: #af5be0;
+}
+
+.notice-dot.forecast-both {
+  background: linear-gradient(90deg, #6d4ed4 50%, #af5be0 50%);
+}
+
+.notice-dot.ovulation-color {
+  border-color: #389cff;
+}
+
+.notice-dot.pms-color {
+  border-color: #1e9e8d;
+}
+
+.date-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-edit-bar .date-action.date-end-action {
+  border: 1px solid #ed1769;
+  background: rgb(255 255 255 / 80%);
+  color: #ed1769;
+}
+
+.calendar-edit-bar .date-action:disabled {
+  opacity: 0.2;
+}
+
+@media (max-width: 420px) {
+  .calendar-edit-bar {
+    gap: 8px;
+    margin-inline: 0;
+  }
+
+  .date-actions {
+    gap: 6px;
+  }
+
+  .calendar-edit-bar .date-action {
+    padding-inline: 10px;
+  }
+
+  .calendar-notices {
+    padding: 16px;
+  }
 }

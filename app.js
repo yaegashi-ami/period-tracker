@@ -227,6 +227,7 @@ $('setup-form').addEventListener('submit', (event) => {
 });
 
 const sortedPeriods = () => [...state.periods].sort((a, b) => b.start.localeCompare(a.start));
+const unendedPeriodThrough = (date) => sortedPeriods().find(period => !period.end && period.start <= date) ?? null;
 const renderCalendar = (promptGap = true) => {
   const year = displayedMonth.getFullYear(), month = displayedMonth.getMonth();
   $('month-label').textContent = `${year}年 ${month + 1}月 ▾`;
@@ -270,10 +271,49 @@ const renderCalendar = (promptGap = true) => {
     button.dataset.date = iso; grid.append(button);
   }
   const record = recordAt(state.periods, selectedDate);
-  $('date-action').textContent = record ? '生理終了' : '生理開始';
-  $('date-action').disabled = selectedDate > todayISO();
-  $('date-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を${record ? '生理終了日' : '生理開始日'}にする`);
+  const openPeriod = unendedPeriodThrough(selectedDate);
+  const periodAlreadyCoversDate = Boolean(record) || Boolean(openPeriod);
+  $('date-start-action').disabled = selectedDate > todayISO() || periodAlreadyCoversDate || overlaps(state.periods, null, selectedDate, selectedDate);
+  $('date-end-action').disabled = selectedDate > todayISO() || !openPeriod;
+  $('date-start-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を生理開始日にする`);
+  $('date-end-action').setAttribute('aria-label', `${dateLabel(selectedDate)}を生理終了日にする`);
+  renderCalendarNotices(prediction);
   renderGapNotice(promptGap);
+};
+const renderCalendarNotices = (prediction) => {
+  const container = $('calendar-notices');
+  container.replaceChildren();
+  const notices = [];
+  const today = todayISO();
+  const currentPeriod = recordAt(state.periods, today) || (unendedPeriodThrough(today) && { period: unendedPeriodThrough(today), offset: dayGap(unendedPeriodThrough(today).start, today) });
+  if (currentPeriod) notices.push({ kind: 'period-color', text: currentPeriod.offset === 0 ? '生理開始日です' : `生理${currentPeriod.offset + 1}日目です` });
+
+  if (prediction) {
+    const mainDays = dayGap(today, prediction.main);
+    const alternativeDays = dayGap(today, prediction.alternative);
+    const inNoticeWindow = days => days >= 0 && days <= 3;
+    if (prediction.main === prediction.alternative && inNoticeWindow(mainDays)) {
+      notices.push({ kind: 'forecast-both', text: mainDays === 0 ? '本命／対抗の開始予定日です' : `本命／対抗の開始日${mainDays}日前です` });
+    } else {
+      if (inNoticeWindow(mainDays)) notices.push({ kind: 'forecast-main', text: mainDays === 0 ? '本命の開始予定日です' : `本命の開始日${mainDays}日前です` });
+      if (inNoticeWindow(alternativeDays)) notices.push({ kind: 'forecast-alternative', text: alternativeDays === 0 ? '対抗の開始予定日です' : `対抗の開始日${alternativeDays}日前です` });
+    }
+    if (state.showOvulation && prediction.ovulation === today) notices.push({ kind: 'ovulation-color', text: '排卵予定日です' });
+    if (state.showPremenstrual && prediction.pmsFrom <= today && today <= prediction.pmsTo) notices.push({ kind: 'pms-color', text: 'PMSが出やすい時期です' });
+  }
+
+  container.hidden = notices.length === 0;
+  for (const notice of notices) {
+    const row = document.createElement('p');
+    row.className = 'calendar-notice';
+    const dot = document.createElement('i');
+    dot.className = `notice-dot ${notice.kind}`;
+    dot.setAttribute('aria-hidden', 'true');
+    const text = document.createElement('span');
+    text.textContent = notice.text;
+    row.append(dot, text);
+    container.append(row);
+  }
 };
 const moveMonth = delta => {
   displayedMonth = new Date(displayedMonth.getFullYear(), displayedMonth.getMonth() + delta, 1);
@@ -296,13 +336,24 @@ window.addEventListener('pointerup', event => {
   suppressDateClickUntil = Date.now() + 400;
   moveMonth(dx < 0 ? 1 : -1);
 });
-$('date-action').addEventListener('click', () => {
-  if (!selectedDate || selectedDate > todayISO()) return;
-  const record = recordAt(state.periods, selectedDate);
+$('date-start-action').addEventListener('click', () => {
+  if (!selectedDate || selectedDate > todayISO() || recordAt(state.periods, selectedDate) || overlaps(state.periods, null, selectedDate, selectedDate)) return;
+  const openPeriod = unendedPeriodThrough(selectedDate);
+  if (openPeriod) return;
   showError('calendar-error', '');
   const previous = structuredClone(state);
-  if (record) record.period.end = selectedDate;
-  else state.periods.push({ id: createId(), start: selectedDate, end: null });
+  state.periods.push({ id: createId(), start: selectedDate, end: null });
+  if (!save()) { state = previous; return; }
+  renderCalendar();
+});
+$('date-end-action').addEventListener('click', () => {
+  if (!selectedDate || selectedDate > todayISO()) return;
+  const period = unendedPeriodThrough(selectedDate);
+  if (!period) return;
+  if (overlaps(state.periods, period.id, period.start, selectedDate)) { showError('calendar-error', 'ほかの生理の記録と日付が重なっています。'); return; }
+  showError('calendar-error', '');
+  const previous = structuredClone(state);
+  period.end = selectedDate;
   if (!save()) { state = previous; return; }
   renderCalendar();
 });

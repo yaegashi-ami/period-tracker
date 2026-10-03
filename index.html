@@ -109,6 +109,7 @@
           <h1 id="calendar-title">生理カレンダー</h1>
           <button id="settings-button" class="icon-button" type="button" aria-label="表示する目安を選ぶ" popovertarget="settings-popover"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
         </div>
+        <div id="calendar-notices" class="calendar-notices" aria-live="polite" aria-label="今日のお知らせ" hidden></div>
         <div class="calendar-card">
           <div class="month-nav"><button id="prev-month" class="icon-button" type="button" aria-label="前の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button id="month-label" class="month-title" type="button" aria-haspopup="dialog"></button><button id="next-month" class="icon-button" type="button" aria-label="次の月"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div>
           <div class="legend" aria-label="日付の色の意味">
@@ -120,7 +121,7 @@
           </div>
           <div class="weekdays" aria-hidden="true"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
           <div id="calendar-grid" class="calendar-grid"></div>
-          <div class="calendar-edit-bar"><span class="edit-period">生理を編集</span><button id="date-action" class="date-action" type="button">生理開始</button></div>
+          <div class="calendar-edit-bar"><span class="edit-period">生理を編集</span><div class="date-actions"><button id="date-start-action" class="date-action" type="button">生理開始</button><button id="date-end-action" class="date-action date-end-action" type="button">生理終了</button></div></div>
           <p id="calendar-error" class="error-message" role="alert" hidden></p>
         </div>
         <button id="gap-notice" class="gap-notice" type="button" aria-haspopup="dialog" hidden><span>記録が空いている期間があります</span><svg class="button-chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6" /></svg></button>
