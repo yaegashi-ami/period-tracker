@@ -12,6 +12,15 @@ export const recordAt = (periods, iso) => {
   }
   return null;
 };
+// 同日開始・終了の記録の翌々日に次の開始がある場合、前者を予測から除外する。
+// 出血記録そのものは保持し、カレンダー表示・編集・バックアップに使う。
+export const excludedPredictionRecords = (state) => ordered(state.periods).filter((period, i, records) =>
+  period.end === period.start && records[i + 1] && dayGap(period.start, records[i + 1].start) === 2
+);
+export const predictionRecords = (state) => {
+  const excluded = new Set(excludedPredictionRecords(state));
+  return ordered(state.periods).filter(period => !excluded.has(period));
+};
 const sixMonthsBefore = (iso) => {
   const [year, month, day] = iso.split('-').map(Number);
   const first = new Date(Date.UTC(year, month - 7, 1));
@@ -22,14 +31,14 @@ const sixMonthsBefore = (iso) => {
 // 区間の判断は隣り合う開始日の組に結び付ける。日付変更・記録追加後は持ち越さない。
 export const intervalKey = (from, to) => `${from}/${to}`;
 export const activeReviews = (state) => {
-  const records = ordered(state.periods);
+  const records = predictionRecords(state);
   const keys = new Set(records.slice(1).map((p, i) => intervalKey(records[i].start, p.start)));
   return (Array.isArray(state.intervalReviews) ? state.intervalReviews : []).filter(review =>
     review && ['unknown', 'long'].includes(review.kind) && keys.has(intervalKey(review.from, review.to))
   );
 };
 export const cycleIntervals = (state) => {
-  const records = ordered(state.periods);
+  const records = predictionRecords(state);
   const reviews = new Map(activeReviews(state).map(review => [intervalKey(review.from, review.to), review.kind]));
   return records.slice(1).map((record, i) => {
     const from = records[i].start, to = record.start, key = intervalKey(from, to);
@@ -67,7 +76,7 @@ const weightedMedian = (cycles) => {
   }
 };
 export const predict = (state) => {
-  const records = ordered(state.periods);
+  const records = predictionRecords(state);
   if (!records.length) return null;
   const latest = records.at(-1).start;
   const cycles = weightedCycles(state);
